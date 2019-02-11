@@ -4,18 +4,18 @@ import {
     Text,
     View,
 } from 'react-native';
+import { Constants } from 'expo';
+
+import HomeCalendar from '../components/screenComponents/HomeCalendar';
 
 const styles = StyleSheet.create({
     tempView: {
         flex: 1,
+        marginTop: Constants.statusBarHeight + 15,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
     },
-    tempText: {
-        fontWeight: 'bold',
-        fontSize: 30
-    }
 })
 
 export default class HomeScreen extends React.Component {
@@ -26,7 +26,7 @@ export default class HomeScreen extends React.Component {
     render() {
         return (
             <View style={styles.tempView}>
-                <Text style={styles.tempText}>Home</Text>
+                <HomeCalendar />
             </View>
         )
     }
