@@ -19,9 +19,9 @@ export  default class HomeCalendar extends React.Component {
                 horizontal={true}
 
                 markedDates={{
-                    '2019-02-06': {dots: [cse3310, ie2320]},
-                    '2019-02-17': {dots: [cse3310, cse3320, ie2320]},
-                    '2019-02-20': {dots: [cse3310, ie2320]},
+                    '2019-04-06': {dots: [cse3310, ie2320]},
+                    '2019-04-17': {dots: [cse3310, cse3320, ie2320]},
+                    '2019-04-20': {dots: [cse3310, ie2320]},
                 }}
             />
         )
