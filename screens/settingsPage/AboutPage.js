@@ -10,6 +10,7 @@ import Colors from '../../constants/Colors'
 
 const styles = StyleSheet.create({
     tempView: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -21,21 +22,32 @@ const styles = StyleSheet.create({
 });
 
 export default class AboutPage extends React.Component {
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            headerTitle: 'About YACA',
+            headerLeft: (
+                <Ionicons style={{ paddingLeft: 22 }} onPress={navigation.getParam('goBack')}
+                    name="md-arrow-back" size={32} color={Colors.tintColor} />
+            ),
+        };
+    };
+
+    componentDidMount() {
+        this.props.navigation.setParams({ goBack: this._goBack });
+    }
+
+    _goBack = () => {
+        this.props.navigation.navigate('SettingsStack');
+    }
+
     render() {
         return (
-            <View style={{flex: 1}}>
-                <View style={[styles.tempView, {flex: 1}]}>
-                    <Text style={styles.tempText}>YACA</Text>
-                </View>
-                <View style={[styles.tempView, {flex: 2}]}>
-                    <Text>
-                        YACA as in Yet Another Calendar Application is a app to help students manage
-                        their school events easily.
-                    </Text>
-
-                    <Ionicons onPress={() => this.props.navigation.navigate('SettingsStack')}
-                     name="md-arrow-back" size={50} color={Colors.tintColor} />
-                </View>
+            <View style={styles.tempView}>
+                <Text>
+                    YACA as in Yet Another Calendar Application is a app to help students manage
+                    their school events easily.
+                </Text>
             </View>
         )
     }

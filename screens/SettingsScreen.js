@@ -4,7 +4,6 @@ import {
     Text,
     View,
 } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
 import SettingsList from 'react-native-settings-list';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -30,6 +29,11 @@ const styles = StyleSheet.create({
 });
 
 export default class HomeScreen extends React.Component {
+
+    static navigationOptions = {
+        headerTitle: 'Settings',
+    };
+
     constructor() {
         super();
     }
@@ -41,7 +45,10 @@ export default class HomeScreen extends React.Component {
                     <SettingsList>
                         <SettingsList.Item title='Backup/Restore' icon={<Ionicons style={styles.iconStyle} name="md-cloud" size={32} color={Colors.tintColor} />} />
                         <SettingsList.Item title='Classes' icon={<Ionicons style={styles.iconStyle} name="md-flask" size={32} color={Colors.tintColor} />} />
-                        <SettingsList.Item title='Notifications' icon={<Ionicons style={styles.iconStyle} name="md-notifications" size={32} color={Colors.tintColor} />} />
+                        <SettingsList.Item 
+                            title='Notifications' icon={<Ionicons style={styles.iconStyle} name="md-notifications" size={32} color={Colors.tintColor} />}
+                            onPress={() => this.props.navigation.navigate('Notifications')}
+                        />
                         <SettingsList.Item 
                             title='About' icon={<Ionicons style={styles.iconStyle} name="md-information-circle" size={32} color={Colors.tintColor} />}
                             onPress={() => this.props.navigation.navigate('About')}
@@ -50,6 +57,7 @@ export default class HomeScreen extends React.Component {
                 </View>
                 <View style={styles.tempView} >
                     <Text style={styles.tempText}>YACA</Text>
+                    <Text>alpha 0.2019.04.16</Text>
                 </View>
             </View>
         );
