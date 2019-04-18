@@ -43,7 +43,9 @@ export default class HomeScreen extends React.Component {
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
                     <SettingsList>
-                        <SettingsList.Item title='Backup/Restore' icon={<Ionicons style={styles.iconStyle} name="md-cloud" size={32} color={Colors.tintColor} />} />
+                        <SettingsList.Item title='Backup/Restore' icon={<Ionicons style={styles.iconStyle} name="md-cloud" size={32} color={Colors.tintColor} />}
+                            onPress={() => this.props.navigation.navigate('Backup')}
+                        />
                         <SettingsList.Item 
                             title='Colors' icon={<Ionicons style={styles.iconStyle} name="md-color-palette" size={32} color={Colors.tintColor} />}
                             onPress={() => this.props.navigation.navigate('Color')}    
@@ -60,7 +62,7 @@ export default class HomeScreen extends React.Component {
                 </View>
                 <View style={styles.tempView} >
                     <Text style={styles.tempText}>YACA</Text>
-                    <Text>alpha 0.2019.04.16</Text>
+                    <Text>alpha 0.2019.04.18</Text>
                 </View>
             </View>
         );

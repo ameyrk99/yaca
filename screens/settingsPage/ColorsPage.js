@@ -8,7 +8,6 @@ import {
     TouchableHighlight,
     Button,
 } from 'react-native';
-import update from 'react-addons-update';
 import { Ionicons } from '@expo/vector-icons';
 import SettingsList from 'react-native-settings-list';
 import ColorPalette from 'react-native-color-palette';
@@ -161,12 +160,12 @@ export default class ColorsPage extends React.Component {
                 </Modal>
 
                 <SettingsList>
-                    <SettingsList.Header headerText='Classes (Hold to delete class)' headerStyle={{ color: 'black', marginTop: 10 }} />
-                    
+                    <SettingsList.Header headerText='Classes' headerStyle={{ color: 'black', marginTop: 10 }} />
+
                     <SettingsList.Item
                         key={0}
                         title={names[0]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[0]}
                         />}
@@ -182,7 +181,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={1}
                         title={names[1]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[1]}
                         />}
@@ -198,7 +197,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={2}
                         title={names[2]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[2]}
                         />}
@@ -214,7 +213,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={3}
                         title={names[3]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[3]}
                         />}
@@ -230,7 +229,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={4}
                         title={names[4]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[4]}
                         />}
@@ -246,7 +245,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={5}
                         title={names[5]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[5]}
                         />}
@@ -263,7 +262,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={6}
                         title={names[6]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[6]}
                         />}
@@ -279,7 +278,7 @@ export default class ColorsPage extends React.Component {
                     <SettingsList.Item
                         key={7}
                         title={names[7]}
-                        icon={<Ionicons style={styles.iconStyle}
+                        arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
                             size={32} color={ccolors[7]}
                         />}
