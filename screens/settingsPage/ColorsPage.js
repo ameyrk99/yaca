@@ -1,3 +1,4 @@
+// Shared preferences
 import React from 'react';
 import {
     StyleSheet,
@@ -5,8 +6,8 @@ import {
     ScrollView,
     View,
     Modal,
-    TouchableHighlight,
     Button,
+    TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import SettingsList from 'react-native-settings-list';
@@ -36,12 +37,12 @@ const styles = StyleSheet.create({
 });
 
 let eventsProp = {
-    'CSE 3320 - Operating Systems': 'red',
-    'CSE 3310 - Fundamentals of SE': 'blue',
-    'IE 2320 - Stats and Probability': 'green',
-    'Class 4': 'black',
-    'Class 5': 'black',
-    'Class 6': 'black',
+    classes: {
+        'CSE 3320': 'red',
+        'CSE 3310': 'blue',
+        'IE 2320': 'green',
+        'COMS 2302': 'pink',
+    },
     'Meetings': 'orange',
     'Misc. Events': 'yellow'
 }
@@ -61,7 +62,10 @@ export default class ColorsPage extends React.Component {
     state = {
         events: eventsProp,
         paletteVis: false,
-        toChange: -1,
+        toChangeName: '-1',
+        toChangeColor: '#000',
+        addingClass: false,
+        text: ' '
     }
 
     componentDidMount() {
@@ -77,28 +81,6 @@ export default class ColorsPage extends React.Component {
     }
 
     render() {
-        // let ClassList = [];
-        const names = Object.keys(this.state.events)
-        const ccolors = Object.values(this.state.events)
-        // for (var i = 0; i < 6; i++) {
-        //     ClassList.push(
-        //         <SettingsList.Item
-        //             key={i}
-        //             title={names[i]}
-        //             icon={<Ionicons style={styles.iconStyle}
-        //                 name="md-square"
-        //                 size={32} color={ccolors[i]}
-        //             />}
-        //             hasNavArrow={false}
-        //             onPress={() => {
-        //                 this.setState({
-        //                     toChange: i,
-        //                 })
-        //                 this.setpaletteVis(true);
-        //             }}
-        //         />
-        //     );
-        // }
 
         const ControlledColorPicker = () => {
             let selectedColor = Colors.colorPalette[0];
@@ -106,14 +88,11 @@ export default class ColorsPage extends React.Component {
                 <View style={styles.tempView}>
                     <ColorPalette
                         onChange={(color) => {
-                            selectedColor = color;
-                            let tempC = this.state.events
-                            tempC[names[this.state.toChange]] = selectedColor
+                            selectedColor = color
+
                             this.setState({
-                                events: tempC,
-                                toChange: -1,
+                                toChangeColor: selectedColor,
                             })
-                            this.setpaletteVis(false);
                         }}
                         value={selectedColor}
                         colors={Colors.colorPalette}
@@ -129,32 +108,104 @@ export default class ColorsPage extends React.Component {
             )
         }
 
+        const classes = this.state.events.classes
+
         return (
             <ScrollView style={{ flex: 1 }}>
                 <Modal
                     animationType='slide'
                     transparent={false}
                     visible={this.state.paletteVis}
+                    presentationStyle='pageSheet'
                     onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
+                        this.setState({
+                            toChangeName: '-1',
+                            toChangeColor: '#000',
+                            text: ' ',
+                            addingClass: false,
+                        })
+                        this.setpaletteVis(false);
                     }}>
-                    <View style={[styles.tempView, { padding: 100 }]}>
-                        <View>
-                            <Text style={styles.tempText}>Select new color</Text>
+                    <View style={[styles.tempView, { padding: 50 }]}>
+                        <View style={{ flex: 1, alignContent: 'center' }}>
+                            <Text style={styles.tempText}>{this.state.addingClass ? 'Select color for new class' : 'Select new color'}</Text>
 
                             <ControlledColorPicker style={{ flex: 1 }} />
+                        </View>
 
-                            <Button
-                                onPress={() => {
-                                    this.setpaletteVis(!this.state.paletteVis);
-                                    this.setState({
-                                        toChange: -1,
-                                    })
-                                }}
-                                title='Cancel'
-                                color={Colors.tintColor}
-                                accessibilityLabel='Cancel new selection of color.'
-                            />
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                            {(this.state.toChangeName !== 'Misc. Events' && this.state.toChangeName !== 'Meetings') && <TextInput
+                                style={{ height: 40 }}
+                                placeholder={this.state.addingClass ? 'Tap to add class name' : 'Tap to edit class name'}
+                                onChangeText={(text) => this.setState({ text })}
+                                maxLength={15}
+                                multiline={false}
+                            />}
+
+                            <View style={{ flexDirection: 'row', paddingTop: 10, alignContent: 'space-around' }}>
+                                <Ionicons style={styles.iconStyle}
+                                    name="md-arrow-back"
+                                    size={32} color={'black'}
+                                    onPress={() => {
+                                        this.setState({
+                                            toChangeName: '-1',
+                                            toChangeColor: '#000',
+                                            text: ' ',
+                                            addingClass: false,
+                                        })
+                                        this.setpaletteVis(false);
+                                    }}
+                                />
+
+                                <Ionicons style={styles.iconStyle}
+                                    name={this.state.addingClass ? 'md-add-circle' : 'md-build'}
+                                    size={32} color={Colors.tintColor}
+                                    onPress={() => {
+
+                                        let tempC = this.state.events
+                                        let name = this.state.toChangeName
+                                        let color = this.state.toChangeColor
+
+                                        if (name === 'Misc. Events' || name === 'Meetings') {
+                                            tempC[name] = color
+                                        } else {
+                                            delete tempC.classes[name]
+                                            if (this.state.text !== ' ') {
+                                                name = this.state.text
+                                            }
+                                            tempC.classes[name] = color
+                                        }
+
+                                        this.setState({
+                                            events: tempC,
+                                            toChangeName: '-1',
+                                            toChangeColor: '#000',
+                                            text: ' ',
+                                            addingClass: false,
+                                        })
+
+                                        this.setpaletteVis(false);
+                                    }}
+                                />
+
+                                {(this.state.toChangeName !== 'Meetings' && this.state.toChangeName !== 'Misc. Events' && !this.state.addingClass) &&
+                                    <Ionicons style={styles.iconStyle}
+                                        name="md-trash"
+                                        size={32} color={'red'}
+                                        onPress={() => {
+                                            let tempC = this.state.events
+                                            delete tempC.classes[this.state.toChangeName]
+                                            this.setState({
+                                                events: tempC,
+                                                toChangeName: '-1',
+                                                toChangeColor: '#000',
+                                                text: ' ',
+                                            })
+                                            this.setpaletteVis(false);
+                                        }}
+                                    />
+                                }
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -162,114 +213,53 @@ export default class ColorsPage extends React.Component {
                 <SettingsList>
                     <SettingsList.Header headerText='Classes' headerStyle={{ color: 'black', marginTop: 10 }} />
 
-                    <SettingsList.Item
-                        key={0}
-                        title={names[0]}
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={ccolors[0]}
-                        />}
-                        hasNavArrow={false}
-                        onPress={() => {
-                            this.setState({
-                                toChange: 0
-                            })
-                            this.setpaletteVis(true);
-                        }}
-                    />
+                    {
+                        Object.keys(classes).reverse().map((c, i) => {
+                            return (
+                                <SettingsList.Item
+                                    key={i}
+                                    title={c}
+                                    arrowIcon={<Ionicons style={styles.iconStyle}
+                                        name="md-square"
+                                        size={32} color={classes[c]}
+                                    />}
+                                    hasNavArrow={false}
+                                    onPress={() => {
+                                        this.setState({
+                                            toChangeName: c
+                                        })
+                                        this.setpaletteVis(true)
+                                    }}
+                                />
+                            )
+                        })
+                    }
 
-                    <SettingsList.Item
-                        key={1}
-                        title={names[1]}
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={ccolors[1]}
-                        />}
+                    {(Object.keys(this.state.events.classes).length < 8) && <SettingsList.Item
+                        title='Add Class'
+                        icon={<Ionicons style={styles.iconStyle} name='md-add-circle' size={32} color={Colors.tintColor} />}
                         hasNavArrow={false}
                         onPress={() => {
                             this.setState({
-                                toChange: 1
+                                toChangeName: '!!!tempname!!!',
+                                addingClass: true,
                             })
-                            this.setpaletteVis(true);
+                            this.setpaletteVis(true)
                         }}
-                    />
-
-                    <SettingsList.Item
-                        key={2}
-                        title={names[2]}
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={ccolors[2]}
-                        />}
-                        hasNavArrow={false}
-                        onPress={() => {
-                            this.setState({
-                                toChange: 2
-                            })
-                            this.setpaletteVis(true);
-                        }}
-                    />
-
-                    <SettingsList.Item
-                        key={3}
-                        title={names[3]}
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={ccolors[3]}
-                        />}
-                        hasNavArrow={false}
-                        onPress={() => {
-                            this.setState({
-                                toChange: 3
-                            })
-                            this.setpaletteVis(true);
-                        }}
-                    />
-
-                    <SettingsList.Item
-                        key={4}
-                        title={names[4]}
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={ccolors[4]}
-                        />}
-                        hasNavArrow={false}
-                        onPress={() => {
-                            this.setState({
-                                toChange: 4
-                            })
-                            this.setpaletteVis(true);
-                        }}
-                    />
-
-                    <SettingsList.Item
-                        key={5}
-                        title={names[5]}
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={ccolors[5]}
-                        />}
-                        hasNavArrow={false}
-                        onPress={() => {
-                            this.setState({
-                                toChange: 5
-                            })
-                            this.setpaletteVis(true);
-                        }}
-                    />
+                    />}
 
                     <SettingsList.Header headerText='Other Events' headerStyle={{ color: 'black', marginTop: 20 }} />
                     <SettingsList.Item
                         key={6}
-                        title={names[6]}
+                        title='Meetings'
                         arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
-                            size={32} color={ccolors[6]}
+                            size={32} color={this.state.events['Meetings']}
                         />}
                         hasNavArrow={false}
                         onPress={() => {
                             this.setState({
-                                toChange: 6
+                                toChangeName: 'Meetings'
                             })
                             this.setpaletteVis(true);
                         }}
@@ -277,15 +267,15 @@ export default class ColorsPage extends React.Component {
 
                     <SettingsList.Item
                         key={7}
-                        title={names[7]}
+                        title='Misc. Events'
                         arrowIcon={<Ionicons style={styles.iconStyle}
                             name="md-square"
-                            size={32} color={ccolors[7]}
+                            size={32} color={this.state.events['Misc. Events']}
                         />}
                         hasNavArrow={false}
                         onPress={() => {
                             this.setState({
-                                toChange: 7
+                                toChangeName: 'Misc. Events'
                             })
                             this.setpaletteVis(true);
                         }}

@@ -1,4 +1,4 @@
-const tintColor = '#2f95dc';
+const tintColor = '#1C73B4';
 
 export default {
     tintColor,
@@ -16,17 +16,13 @@ export default {
       'blue',
       'aqua',
       'teal',
-      'olive',
       'green',
       'lime',
       'yellow',
       'orange',
       'red',
-      'maroon',
       'fuchsia',
-      'purple',
-      'silver',
-      'gray',
+      'purple',,
       'black',
     ],
 };
