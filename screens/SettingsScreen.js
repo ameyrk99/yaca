@@ -44,7 +44,10 @@ export default class HomeScreen extends React.Component {
                 <View style={{ flex: 1 }}>
                     <SettingsList>
                         <SettingsList.Item title='Backup/Restore' icon={<Ionicons style={styles.iconStyle} name="md-cloud" size={32} color={Colors.tintColor} />} />
-                        <SettingsList.Item title='Classes' icon={<Ionicons style={styles.iconStyle} name="md-flask" size={32} color={Colors.tintColor} />} />
+                        <SettingsList.Item 
+                            title='Colors' icon={<Ionicons style={styles.iconStyle} name="md-color-palette" size={32} color={Colors.tintColor} />}
+                            onPress={() => this.props.navigation.navigate('Color')}    
+                        />
                         <SettingsList.Item 
                             title='Notifications' icon={<Ionicons style={styles.iconStyle} name="md-notifications" size={32} color={Colors.tintColor} />}
                             onPress={() => this.props.navigation.navigate('Notifications')}

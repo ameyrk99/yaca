@@ -5,23 +5,18 @@ import MainTabNavigator from './MainTabNavigator';
 
 import AboutPage from '../screens/settingsPage/AboutPage';
 import NotificationsPage from '../screens/settingsPage/NotficationsPage';
+import ColorsPage from '../screens/settingsPage/ColorsPage'
 
 const AboutStack = createStackNavigator({
-    About: {
-        screen: AboutPage,
-        navigationOptions: {
-            headerBackTitle: 'SettingsStack',
-        }
-    }
+    About: { screen: AboutPage }
 });
 
 const NotificationStack = createStackNavigator({
-    Notifications: {
-        screen: NotificationsPage,
-        navigationOptions: {
-            headerBackTitle: 'SettingsStack',
-        }
-    },
+    Notifications: { screen: NotificationsPage }
+});
+
+const ColorsStack = createStackNavigator({
+    Color: { screen: ColorsPage }
 });
 
 export default createAppContainer(createSwitchNavigator(
@@ -30,6 +25,7 @@ export default createAppContainer(createSwitchNavigator(
     {
         Main: MainTabNavigator,
         About: AboutStack,
-        Notification: NotificationStack,
+        Notifications: NotificationStack,
+        Color: ColorsStack,
     }
 ));

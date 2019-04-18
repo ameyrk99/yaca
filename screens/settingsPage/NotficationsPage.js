@@ -58,7 +58,7 @@ export default class NotificationsPage extends React.Component {
                         switchState={this.state.switchValue}
                         switchOnValueChange={(value) => { this.setState({ switchValue: value }) }}
                         hasSwitch={true}
-                        title={this.state.switchValue ? 'Turn on reminders?' : 'Turn off reminders?'}
+                        title={!this.state.switchValue ? 'Turn on reminders?' : 'Turn off reminders?'}
                     />
                     {this.state.switchValue &&
                         <SettingsList.Item onPress={this._showDateTimePicker} titleInfo={this.state.time} hasNavArrow={false} title='Information Example' />
