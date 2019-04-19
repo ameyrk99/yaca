@@ -6,9 +6,9 @@ import {
     ScrollView,
     View,
     Modal,
-    Button,
-    TextInput,
+    AsyncStorage,
 } from 'react-native';
+import { Button, TextInput } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import SettingsList from 'react-native-settings-list';
 import ColorPalette from 'react-native-color-palette';
@@ -36,17 +36,6 @@ const styles = StyleSheet.create({
     }
 });
 
-let eventsProp = {
-    classes: {
-        'CSE 3320': 'red',
-        'CSE 3310': 'blue',
-        'IE 2320': 'green',
-        'COMS 2302': 'pink',
-    },
-    'Meetings': 'orange',
-    'Misc. Events': 'yellow'
-}
-
 export default class ColorsPage extends React.Component {
 
     static navigationOptions = ({ navigation }) => {
@@ -60,17 +49,43 @@ export default class ColorsPage extends React.Component {
     };
 
     state = {
-        events: eventsProp,
+        events: {
+            classes: {
+                'Test Class': 'red'
+            },
+            'Meetings': 'orange',
+            'Misc. Events': 'blue',
+        },
         paletteVis: false,
         toChangeName: '-1',
         toChangeColor: '#000',
         addingClass: false,
-        text: ' '
+        text: '             '
     }
 
     componentDidMount() {
         this.props.navigation.setParams({ goBack: this._goBack });
+        // async () => {
+        //     try {
+        //         let value = await AsyncStorage.getItem('eventsProp');
+        //         this.setState({
+        //             events: value
+        //         })
+        //     } catch (error) {
+        //         ToastAndroid.show('Error reading data', ToastAndroid.SHORT)
+        //     }
+        // }
     }
+
+    // componentWillUnmount() {
+    //     async () => {
+    //         try {
+    //             await AsyncStorage.setItem('eventsProp', JSON.stringify(this.state.events))
+    //         } catch (error) {
+    //             ToastAndroid.show('Error writing data', ToastAndroid.SHORT)
+    //         }
+    //     }
+    // }
 
     _goBack = () => {
         this.props.navigation.navigate('SettingsStack');
@@ -133,19 +148,24 @@ export default class ColorsPage extends React.Component {
                             <ControlledColorPicker style={{ flex: 1 }} />
                         </View>
 
-                        <View style={{ flex: 1, alignItems: 'center' }}>
-                            {(this.state.toChangeName !== 'Misc. Events' && this.state.toChangeName !== 'Meetings') && <TextInput
-                                style={{ height: 40 }}
-                                placeholder={this.state.addingClass ? 'Tap to add class name' : 'Tap to edit class name'}
-                                onChangeText={(text) => this.setState({ text })}
-                                maxLength={15}
-                                multiline={false}
-                            />}
+                        <View style={{ flex: 1 }}>
+                            {(this.state.toChangeName !== 'Misc. Events' && this.state.toChangeName !== 'Meetings') &&
+                                <TextInput
+                                    label={this.state.addingClass ? 'Tap to add class name' : 'Tap to edit class name'}
+                                    value={this.state.text}
+                                    mode='outlined'
+                                    underlineColor={Colors.tintColor}
+                                    // maxLength={15}
+                                    multiline={false}
+                                    onChangeText={text => this.setState({ text })}
+                                />
+                            }
 
                             <View style={{ flexDirection: 'row', paddingTop: 10, alignContent: 'space-around' }}>
-                                <Ionicons style={styles.iconStyle}
-                                    name="md-arrow-back"
-                                    size={32} color={'black'}
+                                <Button icon='arrow-back'
+                                    mode="contained"
+                                    color='black'
+                                    style={{ marginHorizontal: 5 }}
                                     onPress={() => {
                                         this.setState({
                                             toChangeName: '-1',
@@ -155,11 +175,14 @@ export default class ColorsPage extends React.Component {
                                         })
                                         this.setpaletteVis(false);
                                     }}
-                                />
+                                >
+                                    BACK
+                                </Button>
 
-                                <Ionicons style={styles.iconStyle}
-                                    name={this.state.addingClass ? 'md-add-circle' : 'md-build'}
-                                    size={32} color={Colors.tintColor}
+                                <Button icon={this.state.addingClass ? 'add' : 'edit'}
+                                    mode="contained"
+                                    color={Colors.tintColor}
+                                    style={{ marginHorizontal: 5 }}
                                     onPress={() => {
 
                                         let tempC = this.state.events
@@ -186,12 +209,15 @@ export default class ColorsPage extends React.Component {
 
                                         this.setpaletteVis(false);
                                     }}
-                                />
+                                >
+                                    {this.state.addingClass ? 'ADD' : 'EDIT'}
+                                </Button>
 
                                 {(this.state.toChangeName !== 'Meetings' && this.state.toChangeName !== 'Misc. Events' && !this.state.addingClass) &&
-                                    <Ionicons style={styles.iconStyle}
-                                        name="md-trash"
-                                        size={32} color={'red'}
+                                    <Button icon='delete'
+                                        mode="contained"
+                                        color='red'
+                                        style={{ marginHorizontal: 5 }}
                                         onPress={() => {
                                             let tempC = this.state.events
                                             delete tempC.classes[this.state.toChangeName]
@@ -203,7 +229,9 @@ export default class ColorsPage extends React.Component {
                                             })
                                             this.setpaletteVis(false);
                                         }}
-                                    />
+                                    >
+                                        DELETE
+                                    </Button>
                                 }
                             </View>
                         </View>
