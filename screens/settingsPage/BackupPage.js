@@ -6,8 +6,8 @@ import {
     ToastAndroid,
     TouchableOpacity,
 } from 'react-native';
+import { Caption, List } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import SettingsList from 'react-native-settings-list';
 
 import Colors from '../../constants/Colors'
 
@@ -29,6 +29,12 @@ const styles = StyleSheet.create({
         fontSize: 40,
         alignSelf: 'center',
         color: Colors.tintColor
+    },
+    listStyle: {
+        paddingVertical: -20,
+        borderRadius: 0,
+        borderWidth: 0.5,
+        borderColor: '#d6d7da',
     }
 });
 
@@ -74,11 +80,15 @@ export default class BackupPage extends React.Component {
                     </TouchableOpacity>
                 }
                 {this.state.userIsLogged &&
-                    <SettingsList>
-                        <SettingsList.Item
-                            titleInfo='user.name@gmail.com'
-                            hasNavArrow={false} title='Logout'
-                            icon={<Ionicons style={styles.iconStyle} name="logo-google" size={32} color={Colors.tintColor} />}
+
+                    <List.Section>
+                        <List.Item
+                            title='Logout'
+                            left={() => <List.Icon icon='account-circle' />}
+                            right={() => <View style={{alignSelf: 'center'}}>
+                                            <Text style={{ alignSelf: 'center', color: 'gray', paddingRight: 12}}>user.name@gmail.com</Text>
+                                        </View>}
+                            style={styles.listStyle}
                             delayLongPress={1000}
                             onLongPress={() => {
                                 ToastAndroid.show('User logged out', ToastAndroid.SHORT)
@@ -87,19 +97,19 @@ export default class BackupPage extends React.Component {
                                 })
                             }}
                         />
-                        <SettingsList.Item
-                            hasArrow={false}
+                        <List.Item
                             title='Backup'
-                            icon={<Ionicons style={styles.iconStyle} name="md-cloud-upload" size={32} color={Colors.tintColor} />}
+                            left={() => <List.Icon icon='cloud-upload' />}
+                            style={styles.listStyle}
                             onPress={() => ToastAndroid.show('Backup Complete', ToastAndroid.SHORT)}
                         />
-                        <SettingsList.Item
-                            hasArrow={false}
+                        <List.Item
                             title='Restore'
-                            icon={<Ionicons style={styles.iconStyle} name="md-cloud-download" size={32} color={Colors.tintColor} />}
-                            onPress={() => ToastAndroid.show('Restoration Complete', ToastAndroid.SHORT)}
+                            left={() => <List.Icon icon='cloud-download' />}
+                            style={styles.listStyle}
+                            onPress={() => ToastAndroid.show('Backup Complete', ToastAndroid.SHORT)}
                         />
-                    </SettingsList>
+                    </List.Section>
                 }
             </View>
         )

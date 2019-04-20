@@ -1,11 +1,9 @@
 import React from 'react';
 import {
     StyleSheet,
-    Text,
     View,
 } from 'react-native';
-import SettingsList from 'react-native-settings-list';
-import { Ionicons } from '@expo/vector-icons';
+import { Caption, Title, List } from 'react-native-paper';
 
 import Colors from '../constants/Colors'
 
@@ -25,6 +23,12 @@ const styles = StyleSheet.create({
     tempText: {
         fontWeight: 'bold',
         fontSize: 45
+    },
+    listStyle: {
+        paddingVertical: -20,
+        borderRadius: 0,
+        borderWidth: 0.5,
+        borderColor: '#d6d7da',
     }
 });
 
@@ -40,29 +44,40 @@ export default class HomeScreen extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <View style={{ flex: 1 }}>
-                    <SettingsList>
-                        <SettingsList.Item title='Backup/Restore' icon={<Ionicons style={styles.iconStyle} name="md-cloud" size={32} color={Colors.tintColor} />}
-                            onPress={() => this.props.navigation.navigate('Backup')}
-                        />
-                        <SettingsList.Item 
-                            title='Colors' icon={<Ionicons style={styles.iconStyle} name="md-color-palette" size={32} color={Colors.tintColor} />}
-                            onPress={() => this.props.navigation.navigate('Color')}    
-                        />
-                        <SettingsList.Item 
-                            title='Notifications' icon={<Ionicons style={styles.iconStyle} name="md-notifications" size={32} color={Colors.tintColor} />}
-                            onPress={() => this.props.navigation.navigate('Notifications')}
-                        />
-                        <SettingsList.Item 
-                            title='About' icon={<Ionicons style={styles.iconStyle} name="md-information-circle" size={32} color={Colors.tintColor} />}
-                            onPress={() => this.props.navigation.navigate('About')}
-                        />
-                    </SettingsList>
-                </View>
+            <View style={{ flex: 1, paddingTop: 15 }}>
+                <List.Section>
+                    <List.Item
+                        title='Backup/Restore'
+                        left={() => <List.Icon icon='cloud' />}
+                        right={() => <List.Icon icon='keyboard-arrow-right' />}
+                        style={styles.listStyle}
+                        onPress={() => this.props.navigation.navigate('Backup')}
+                    />
+                    <List.Item
+                        title='Colors'
+                        left={() => <List.Icon icon="color-lens" />}
+                        right={() => <List.Icon icon='keyboard-arrow-right' />}
+                        style={styles.listStyle}
+                        onPress={() => this.props.navigation.navigate('Color')}
+                    />
+                    <List.Item
+                        title='Notifications'
+                        left={() => <List.Icon icon="notifications" />}
+                        right={() => <List.Icon icon='keyboard-arrow-right' />}
+                        style={styles.listStyle}
+                        onPress={() => this.props.navigation.navigate('Notifications')}
+                    />
+                    <List.Item
+                        title='About'
+                        left={() => <List.Icon icon="info" />}
+                        right={() => <List.Icon icon='keyboard-arrow-right' />}
+                        style={styles.listStyle}
+                        onPress={() => this.props.navigation.navigate('About')}
+                    />
+                </List.Section>
                 <View style={styles.tempView} >
-                    <Text style={styles.tempText}>YACA</Text>
-                    <Text>alpha 0.2019.04.18</Text>
+                    <Title>YACA</Title>
+                    <Caption>alpha 0.2019.04.18</Caption>
                 </View>
             </View>
         );

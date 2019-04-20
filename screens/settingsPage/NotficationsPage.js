@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
-    Text,
     View,
-    Button
 } from 'react-native';
+import { Caption, Text, Checkbox, List } from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import SettingsList from 'react-native-settings-list';
 import { Ionicons } from '@expo/vector-icons';
 
-import Colors from '../../constants/Colors'
+import Colors from '../../constants/Colors';
+
+const styles = StyleSheet.create({
+    listStyle: {
+        borderRadius: 0,
+        borderWidth: 0.5,
+        borderColor: '#d6d7da',
+    }
+});
 
 export default class NotificationsPage extends React.Component {
 
@@ -17,7 +23,7 @@ export default class NotificationsPage extends React.Component {
         return {
             headerTitle: 'Notification Settings',
             headerLeft: (
-                <Ionicons style={{paddingLeft: 22}} onPress={navigation.getParam('goBack')}
+                <Ionicons style={{ paddingLeft: 22 }} onPress={navigation.getParam('goBack')}
                     name="md-arrow-back" size={32} color={Colors.tintColor} />
             ),
         }
@@ -52,18 +58,24 @@ export default class NotificationsPage extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, flexDirection: 'column', paddingTop: 15 }}>
-                <SettingsList>
-                    <SettingsList.Item
-                        hasNavArrow={false}
-                        switchState={this.state.switchValue}
-                        switchOnValueChange={(value) => { this.setState({ switchValue: value }) }}
-                        hasSwitch={true}
+                <List.Section>
+                    <List.Item
                         title={!this.state.switchValue ? 'Turn on reminders?' : 'Turn off reminders?'}
+                        right={() => <List.Icon icon={this.state.switchValue ? 'notifications-active' : 'notifications-off'} />}
+                        style={[styles.listStyle, {paddingVertical: -25}]}
+                        onPress={() => {
+                            this.setState({
+                                switchValue: !this.state.switchValue
+                            })
+                        }}
                     />
-                    {this.state.switchValue &&
-                        <SettingsList.Item onPress={this._showDateTimePicker} titleInfo={this.state.time} hasNavArrow={false} title='Information Example' />
-                    }
-                </SettingsList>
+                    {this.state.switchValue && <List.Item
+                        title='Notified daily at'
+                        right={() => <Text style={{ alignSelf: 'center', color: 'gray', paddingRight: 12 }}>{this.state.time}</Text>}
+                        style={styles.listStyle}
+                        onPress={this._showDateTimePicker}
+                    />}
+                </List.Section>
 
                 <View style={{ flex: 1 }}>
                     <DateTimePicker

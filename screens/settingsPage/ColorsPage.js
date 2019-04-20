@@ -2,15 +2,13 @@
 import React from 'react';
 import {
     StyleSheet,
-    Text,
     ScrollView,
     View,
     Modal,
     AsyncStorage,
 } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Caption, Title, List, Text, Button, TextInput } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-import SettingsList from 'react-native-settings-list';
 import ColorPalette from 'react-native-color-palette';
 
 import Colors from '../../constants/Colors'
@@ -33,6 +31,12 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         alignSelf: 'center',
         fontSize: 15
+    },
+    listStyle: {
+        paddingVertical: -20,
+        borderRadius: 0,
+        borderWidth: 0.5,
+        borderColor: '#d6d7da',
     }
 });
 
@@ -60,7 +64,7 @@ export default class ColorsPage extends React.Component {
         toChangeName: '-1',
         toChangeColor: '#000',
         addingClass: false,
-        text: '             '
+        text: ' '
     }
 
     componentDidMount() {
@@ -151,11 +155,11 @@ export default class ColorsPage extends React.Component {
                         <View style={{ flex: 1 }}>
                             {(this.state.toChangeName !== 'Misc. Events' && this.state.toChangeName !== 'Meetings') &&
                                 <TextInput
+                                    style={{ height: 55 }}
                                     label={this.state.addingClass ? 'Tap to add class name' : 'Tap to edit class name'}
                                     value={this.state.text}
                                     mode='outlined'
                                     underlineColor={Colors.tintColor}
-                                    // maxLength={15}
                                     multiline={false}
                                     onChangeText={text => this.setState({ text })}
                                 />
@@ -238,20 +242,16 @@ export default class ColorsPage extends React.Component {
                     </View>
                 </Modal>
 
-                <SettingsList>
-                    <SettingsList.Header headerText='Classes' headerStyle={{ color: 'black', marginTop: 10 }} />
-
+                <List.Section>
+                    <List.Subheader>Classes</List.Subheader>
                     {
                         Object.keys(classes).reverse().map((c, i) => {
                             return (
-                                <SettingsList.Item
+                                <List.Item
                                     key={i}
                                     title={c}
-                                    arrowIcon={<Ionicons style={styles.iconStyle}
-                                        name="md-square"
-                                        size={32} color={classes[c]}
-                                    />}
-                                    hasNavArrow={false}
+                                    right={() => <List.Icon icon='format-color-fill' color={classes[c]} />}
+                                    style={styles.listStyle}
                                     onPress={() => {
                                         this.setState({
                                             toChangeName: c
@@ -263,28 +263,27 @@ export default class ColorsPage extends React.Component {
                         })
                     }
 
-                    {(Object.keys(this.state.events.classes).length < 8) && <SettingsList.Item
-                        title='Add Class'
-                        icon={<Ionicons style={styles.iconStyle} name='md-add-circle' size={32} color={Colors.tintColor} />}
-                        hasNavArrow={false}
-                        onPress={() => {
-                            this.setState({
-                                toChangeName: '!!!tempname!!!',
-                                addingClass: true,
-                            })
-                            this.setpaletteVis(true)
-                        }}
-                    />}
+                    {(Object.keys(this.state.events.classes).length < 8) &&
+                        <List.Item
+                            title='Add Class'
+                            left={() => <List.Icon icon='add' />}
+                            style={styles.listStyle}
+                            onPress={() => {
+                                this.setState({
+                                    toChangeName: '!!!tempname!!!',
+                                    addingClass: true,
+                                })
+                                this.setpaletteVis(true)
+                            }}
+                        />
+                    }
 
-                    <SettingsList.Header headerText='Other Events' headerStyle={{ color: 'black', marginTop: 20 }} />
-                    <SettingsList.Item
+                    <List.Subheader>Other Events</List.Subheader>
+                    <List.Item
                         key={6}
                         title='Meetings'
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={this.state.events['Meetings']}
-                        />}
-                        hasNavArrow={false}
+                        right={() => <List.Icon icon='format-color-fill' color={this.state.events['Meetings']} />}
+                        style={styles.listStyle}
                         onPress={() => {
                             this.setState({
                                 toChangeName: 'Meetings'
@@ -293,14 +292,11 @@ export default class ColorsPage extends React.Component {
                         }}
                     />
 
-                    <SettingsList.Item
+                    <List.Item
                         key={7}
                         title='Misc. Events'
-                        arrowIcon={<Ionicons style={styles.iconStyle}
-                            name="md-square"
-                            size={32} color={this.state.events['Misc. Events']}
-                        />}
-                        hasNavArrow={false}
+                        right={() => <List.Icon icon='format-color-fill' color={this.state.events['Misc. Events']} />}
+                        style={styles.listStyle}
                         onPress={() => {
                             this.setState({
                                 toChangeName: 'Misc. Events'
@@ -308,7 +304,9 @@ export default class ColorsPage extends React.Component {
                             this.setpaletteVis(true);
                         }}
                     />
-                </SettingsList>
+                </List.Section>
+
+                <Caption style={{ alignSelf: 'center' }}>Tap on class to edit it.</Caption>
             </ScrollView>
         )
     }

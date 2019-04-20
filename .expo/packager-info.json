@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 16470,
-  "expoServerNgrokUrl": "https://k3-s5f.ameyrk3.yaca.exp.direct",
-  "packagerNgrokUrl": "https://packager.k3-s5f.ameyrk3.yaca.exp.direct",
-  "ngrokPid": 16528
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }

@@ -1,13 +1,14 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
 import TabBarIcon from '../components/TabBarIcon';
 
 import HomeScreen from '../screens/HomeScreen';
 import OverviewScreen from '../screens/OverviewScreen';
-import AddEventScreen from '../screens/AddEventScreen';
-import SearchScreen from '../screens/SearchScreen';
+// import AddEventScreen from '../screens/AddEventScreen';
+// import SearchScreen from '../screens/SearchScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const HomeStack = createStackNavigator({
@@ -16,14 +17,9 @@ const HomeStack = createStackNavigator({
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
+  tabBarIcon: (
     <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-home'
-      }
+      name='md-home'
     />
   ),
 };
@@ -34,53 +30,38 @@ const OverviewStack = createStackNavigator({
 
 OverviewStack.navigationOptions = {
   tabBarLabel: 'Overview',
-  tabBarIcon: ({ focused }) => (
+  tabBarIcon: (
     <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-calendar'
-      }
+      name='md-calendar'
     />
   ),
 };
 
-const AddEventStack = createStackNavigator({
-  AddEvent: AddEventScreen,
-});
+// const AddEventStack = createStackNavigator({
+//   AddEvent: AddEventScreen,
+// });
 
-AddEventStack.navigationOptions = {
-  tabBarLabel: 'AddEvent',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-add'
-      }
-    />
-  ),
-};
+// AddEventStack.navigationOptions = {
+//   tabBarLabel: 'Add Event',
+//   tabBarIcon: (
+//     <TabBarIcon
+//       name='md-add'
+//     />
+//   ),
+// };
 
-const SearchStack = createStackNavigator({
-  Search: SearchScreen,
-});
+// const SearchStack = createStackNavigator({
+//   Search: SearchScreen,
+// });
 
-SearchStack.navigationOptions = {
-  tabBarLabel: 'Search',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-search'
-      }
-    />
-  ),
-};
+// SearchStack.navigationOptions = {
+//   tabBarLabel: 'Search',
+//   tabBarIcon: (
+//     <TabBarIcon
+//       name='md-search'
+//     />
+//   ),
+// };
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -88,18 +69,20 @@ const SettingsStack = createStackNavigator({
 
 SettingsStack.navigationOptions = {
   tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
+  tabBarIcon: (
     <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-settings'}
+      name='md-settings'
     />
   ),
 };
 
-export default createBottomTabNavigator({
+export default createMaterialBottomTabNavigator({
   HomeStack,
   OverviewStack,
-  AddEventStack,
-  SearchStack,
+  // AddEventStack,
+  // SearchStack,
   SettingsStack,
-});
+}, {
+    activeColor: '#FFFFFF',
+  }
+);
