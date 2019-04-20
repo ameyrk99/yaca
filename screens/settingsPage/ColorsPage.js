@@ -54,9 +54,7 @@ export default class ColorsPage extends React.Component {
 
     state = {
         events: {
-            classes: {
-                'Test Class': 'red'
-            },
+            classes: {},
             'Meetings': 'orange',
             'Misc. Events': 'blue',
         },
@@ -67,29 +65,43 @@ export default class ColorsPage extends React.Component {
         text: ' '
     }
 
-    componentDidMount() {
-        this.props.navigation.setParams({ goBack: this._goBack });
-        // async () => {
-        //     try {
-        //         let value = await AsyncStorage.getItem('eventsProp');
-        //         this.setState({
-        //             events: value
-        //         })
-        //     } catch (error) {
-        //         ToastAndroid.show('Error reading data', ToastAndroid.SHORT)
-        //     }
-        // }
+    componentWillMount() {
+        async () => {
+            try {
+                const value = await AsyncStorage.getItem('eventsProp')
+                const eventProp = JSON.parse(value)
+                if (!eventProp.classes) {
+                    this.setState({
+                        events: {
+                            classes: {},
+                            'Meetings': 'orange',
+                            'Misc. Events': 'blue',
+                        }
+                    })
+                } else {
+                    this.setState({
+                        events: eventProp
+                    })
+                }
+            } catch (error) {
+                ToastAndroid.show('Error reading data', ToastAndroid.SHORT)
+            }
+        }
     }
 
-    // componentWillUnmount() {
-    //     async () => {
-    //         try {
-    //             await AsyncStorage.setItem('eventsProp', JSON.stringify(this.state.events))
-    //         } catch (error) {
-    //             ToastAndroid.show('Error writing data', ToastAndroid.SHORT)
-    //         }
-    //     }
-    // }
+    componentDidMount() {
+        this.props.navigation.setParams({ goBack: this._goBack });
+    }
+
+    componentWillUnmount() {
+        async () => {
+            try {
+                await AsyncStorage.setItem('eventsProp', JSON.stringify(this.state.events))
+            } catch (error) {
+                ToastAndroid.show('Error writing data', ToastAndroid.SHORT)
+            }
+        }
+    }
 
     _goBack = () => {
         this.props.navigation.navigate('SettingsStack');

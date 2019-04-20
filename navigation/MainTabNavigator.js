@@ -10,6 +10,7 @@ import OverviewScreen from '../screens/OverviewScreen';
 // import AddEventScreen from '../screens/AddEventScreen';
 // import SearchScreen from '../screens/SearchScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import Colors from '../constants/Colors';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -83,6 +84,9 @@ export default createMaterialBottomTabNavigator({
   // SearchStack,
   SettingsStack,
 }, {
+    barStyle: {
+      backgroundColor: Colors.tintColor,
+    },
     activeColor: '#FFFFFF',
   }
 );

@@ -10,13 +10,6 @@ import Colors from '../constants/Colors';
 import HomeCalendar from '../components/screenComponents/HomeCalendar';
 
 const styles = StyleSheet.create({
-    tempView: {
-        flex: 1,
-        marginTop: Constants.statusBarHeight + 15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
     fab: {
         backgroundColor: Colors.tintColor,
         position: 'absolute',
@@ -28,12 +21,12 @@ const styles = StyleSheet.create({
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
-        header: null,
+        headerTitle: 'Home',
     };
 
     render() {
         return (
-            <View style={styles.tempView}>
+            <View style={{ flex: 1 }}>
                 <HomeCalendar />
 
                 <FAB
