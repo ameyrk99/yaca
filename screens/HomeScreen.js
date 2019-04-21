@@ -33,7 +33,7 @@ export default class HomeScreen extends React.Component {
                     style={styles.fab}
                     color={Colors.noticeText}
                     icon="add"
-                    onPress={() => console.log('Pressed')}
+                    onPress={() => this.props.navigation.navigate('AddEvent')}
                 />
             </View>
         )
