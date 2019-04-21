@@ -62,45 +62,11 @@ export default class ColorsPage extends React.Component {
         toChangeName: '-1',
         toChangeColor: '#000',
         addingClass: false,
-        text: ' '
-    }
-
-    componentWillMount() {
-        async () => {
-            try {
-                const value = await AsyncStorage.getItem('eventsProp')
-                const eventProp = JSON.parse(value)
-                if (!eventProp.classes) {
-                    this.setState({
-                        events: {
-                            classes: {},
-                            'Meetings': 'orange',
-                            'Misc. Events': 'blue',
-                        }
-                    })
-                } else {
-                    this.setState({
-                        events: eventProp
-                    })
-                }
-            } catch (error) {
-                ToastAndroid.show('Error reading data', ToastAndroid.SHORT)
-            }
-        }
+        text: ''
     }
 
     componentDidMount() {
         this.props.navigation.setParams({ goBack: this._goBack });
-    }
-
-    componentWillUnmount() {
-        async () => {
-            try {
-                await AsyncStorage.setItem('eventsProp', JSON.stringify(this.state.events))
-            } catch (error) {
-                ToastAndroid.show('Error writing data', ToastAndroid.SHORT)
-            }
-        }
     }
 
     _goBack = () => {
@@ -152,7 +118,7 @@ export default class ColorsPage extends React.Component {
                         this.setState({
                             toChangeName: '-1',
                             toChangeColor: '#000',
-                            text: ' ',
+                            text: '',
                             addingClass: false,
                         })
                         this.setpaletteVis(false);
@@ -167,7 +133,12 @@ export default class ColorsPage extends React.Component {
                         <View style={{ flex: 1 }}>
                             {(this.state.toChangeName !== 'Misc. Events' && this.state.toChangeName !== 'Meetings') &&
                                 <TextInput
-                                    style={{ height: 55 }}
+                                    style={{ height: 50 }}
+                                    theme={{
+                                        colors: {
+                                            primary: Colors.tintColor,
+                                        }
+                                    }}
                                     label={this.state.addingClass ? 'Tap to add class name' : 'Tap to edit class name'}
                                     value={this.state.text}
                                     mode='outlined'
@@ -186,7 +157,7 @@ export default class ColorsPage extends React.Component {
                                         this.setState({
                                             toChangeName: '-1',
                                             toChangeColor: '#000',
-                                            text: ' ',
+                                            text: '',
                                             addingClass: false,
                                         })
                                         this.setpaletteVis(false);
@@ -209,7 +180,7 @@ export default class ColorsPage extends React.Component {
                                             tempC[name] = color
                                         } else {
                                             delete tempC.classes[name]
-                                            if (this.state.text !== ' ') {
+                                            if (this.state.text !== '') {
                                                 name = this.state.text
                                             }
                                             tempC.classes[name] = color
@@ -219,7 +190,7 @@ export default class ColorsPage extends React.Component {
                                             events: tempC,
                                             toChangeName: '-1',
                                             toChangeColor: '#000',
-                                            text: ' ',
+                                            text: '',
                                             addingClass: false,
                                         })
 
@@ -241,7 +212,7 @@ export default class ColorsPage extends React.Component {
                                                 events: tempC,
                                                 toChangeName: '-1',
                                                 toChangeColor: '#000',
-                                                text: ' ',
+                                                text: '',
                                             })
                                             this.setpaletteVis(false);
                                         }}

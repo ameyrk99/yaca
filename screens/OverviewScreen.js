@@ -5,8 +5,33 @@ import {
     StyleSheet
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
+import Emoji from 'react-native-emoji';
 
 import Colors from '../constants/Colors';
+
+const eventProps = {
+    classes: {
+        'CSE 3320': 'red',
+        'CSE 3310': 'blue',
+        'IE 3310': 'green',
+    },
+    'Meetings': 'orange',
+    'Misc. Events': 'blue',
+}
+
+const items = {
+    '2019-04-26': [
+        { key: 'CSE 3320', color: eventProps.classes['CSE 3320'], text: 'Test 1', done: false },
+        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 2', done: false }
+    ],
+    '2019-04-05': [
+        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Quiz 4', done: true }
+    ],
+    '2019-04-20': [
+        { key: 'IE 3310', color: eventProps.classes['IE 3310'], text: 'Quiz 3', done: false },
+        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 3', done: true }
+    ],
+}
 
 export default class HomeCalendar extends Component {
 
@@ -17,19 +42,45 @@ export default class HomeCalendar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: {}
+            items: items,
         };
+    }
+
+    componentDidMount = () => {
+        var d = new Date()
+        const date = d.toISOString().split('T')[0]
+        const temp = this.state.items
+        if (!temp[date]) {
+            temp[date] = []
+
+            this.setState({
+                items: temp,
+            })
+        }
     }
 
     render() {
         return (
             <Agenda
                 items={this.state.items}
-                loadItemsForMonth={this.loadItems.bind(this)}
-                selected={'2019-05-16'}
+                selected={Date()}
+
                 renderItem={this.renderItem.bind(this)}
                 renderEmptyDate={this.renderEmptyDate.bind(this)}
                 rowHasChanged={this.rowHasChanged.bind(this)}
+                renderEmptyData={this.renderEmptyData.bind(this)}
+
+                onDayPress={(day) => {
+                    const temp = this.state.items
+                    const date = day.dateString
+                    if (!temp[date]) {
+                        temp[date] = []
+
+                        this.setState({
+                            items: temp,
+                        })
+                    }
+                }}
 
                 theme={{
                     agendaTodayColor: Colors.tintColor,
@@ -41,49 +92,40 @@ export default class HomeCalendar extends Component {
         );
     }
 
-    loadItems(day) {
-        setTimeout(() => {
-            for (let i = -15; i < 85; i++) {
-                const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-                const strTime = this.timeToString(time);
-                if (!this.state.items[strTime]) {
-                    this.state.items[strTime] = [];
-                    const numItems = Math.floor(Math.random() * 5);
-                    for (let j = 0; j < numItems; j++) {
-                        this.state.items[strTime].push({
-                            name: 'Item for ' + strTime,
-                            height: Math.max(50, Math.floor(Math.random() * 150))
-                        });
-                    }
-                }
-            }
-            //console.log(this.state.items);
-            const newItems = {};
-            Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
-            this.setState({
-                items: newItems
-            });
-        }, 1000);
-        console.log(`Load Items for ${day.year}-${day.month}`);
-    }
-
-    renderItem(item) {
+    renderItem = (item) => {
         return (
-            <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
+            <View style={styles.item}>
+                <Text style={{ alignSelf: 'flex-start', textDecorationLine: item.done ? 'line-through' : 'none' }}>
+                    {item.text} {item.done && <Text style={{ fontStyle: 'italic', color: 'gray' }}>(complete)</Text>}
+                </Text>
+                <Text style={{
+                    alignSelf: 'flex-end',
+                    textAlign: 'right',
+                    color: eventProps.classes[item.key],
+                }}>
+                    {item.key}
+                </Text>
+            </View>
         );
     }
 
-    renderEmptyDate() {
+    renderEmptyData = () => {
         return (
-            <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
+            <View style={styles.emptyData}><Text>Nothing here! <Emoji name={'grinning'} /></Text></View>
         );
     }
 
-    rowHasChanged(r1, r2) {
-        return r1.name !== r2.name;
+    renderEmptyDate = () => {
+        return (
+            <View style={styles.emptyDate}><Text>Nothing here! <Emoji name={'grinning'} /></Text></View>
+        );
     }
 
-    timeToString(time) {
+    rowHasChanged = (r1, r2) => {
+        return r1.key !== r2.key;
+    }
+
+    timeToString = (time) => {
         const date = new Date(time);
         return date.toISOString().split('T')[0];
     }
@@ -92,15 +134,27 @@ export default class HomeCalendar extends Component {
 const styles = StyleSheet.create({
     item: {
         backgroundColor: 'white',
+        alignContent: 'space-around',
         flex: 1,
         borderRadius: 5,
         padding: 10,
         marginRight: 10,
         marginTop: 17
     },
+    emptyData: {
+        marginTop: 200,
+        marginBottom: 100,
+        padding: 20,
+        alignSelf: 'center',
+        flexDirection: 'column',
+        backgroundColor: 'white',
+        alignContent: 'center'
+    },
     emptyDate: {
-        height: 15,
-        flex: 1,
-        paddingTop: 30
+        paddingTop: 45,
+        alignSelf: 'center',
+        flexDirection: 'column',
+        // backgroundColor: 'white',
+        alignContent: 'center'
     }
 });
