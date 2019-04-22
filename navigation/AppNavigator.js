@@ -7,11 +7,11 @@ import AboutPage from '../screens/settingsPage/AboutPage';
 import NotificationsPage from '../screens/settingsPage/NotficationsPage';
 import ColorsPage from '../screens/settingsPage/ColorsPage'
 import BackupPage from '../screens/settingsPage/BackupPage'
-import HomeScreen from '../screens/HomeScreen'
-import AddEventScreen from '../screens/addEvents/AddEventScreen'
-import AddActualEventScreen from '../screens/addEvents/AddActualEventScreen'
-import AddClassScreen from '../screens/addEvents/AddClassScreen'
-import { create } from 'uuid-js';
+// import HomeScreen from '../screens/HomeScreen'
+// import AddEventScreen from '../screens/addEvents/AddEventScreen'
+// import AddActualEventScreen from '../screens/addEvents/AddActualEventScreen'
+// import AddClassScreen from '../screens/addEvents/AddClassScreen'
+// import { create } from 'uuid-js';
 
 /* We could simplify this by doing: 
 const MainNavigator = createStackNavigator({
@@ -41,17 +41,17 @@ const BackupStack = createStackNavigator({
 });
 
 // Home Stacks
-const AddEventStack = createStackNavigator({
-    AddEvent: { screen: AddEventScreen }
-});
+// const AddEventStack = createStackNavigator({
+//     AddEvent: { screen: AddEventScreen }
+// });
 
-const AddActualEventStack = createStackNavigator({
-    AddActualEvent: { screen: AddActualEventScreen }
-});
+// const AddActualEventStack = createStackNavigator({
+//     AddActualEvent: { screen: AddActualEventScreen }
+// });
 
-const AddClassStack = createStackNavigator({
-    AddClass: { screen: AddClassScreen }
-})
+// const AddClassStack = createStackNavigator({
+//     AddClass: { screen: AddClassScreen }
+// })
 
 
 export default createAppContainer(createSwitchNavigator(
@@ -63,8 +63,8 @@ export default createAppContainer(createSwitchNavigator(
         Notifications: NotificationStack,
         Color: ColorsStack,
         Backup: BackupStack,
-        AddEvent: AddEventStack,
-        AddActualEvent: AddActualEventStack,
-        AddClass: AddClassStack,
+        // AddEvent: AddEventStack,
+        // AddActualEvent: AddActualEventStack,
+        // AddClass: AddClassStack,
     }
 ));
