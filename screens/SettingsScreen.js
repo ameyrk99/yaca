@@ -3,7 +3,7 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
-import { Caption, Title, List } from 'react-native-paper';
+import { Text, Caption, Title, List } from 'react-native-paper';
 
 import Colors from '../constants/Colors'
 
@@ -47,11 +47,16 @@ export default class HomeScreen extends React.Component {
             <View style={{ flex: 1, paddingTop: 15 }}>
                 <List.Section>
                     <List.Item
-                        title='Backup/Restore'
-                        left={() => <List.Icon icon='cloud' />}
-                        right={() => <List.Icon icon='keyboard-arrow-right' />}
+                        title='Logout'
+                        left={() => <List.Icon icon='account-circle' />}
+                        right={() => <View style={{ alignSelf: 'center' }}>
+                            <Text style={{ alignSelf: 'center', color: 'gray', paddingRight: 12 }}>user.name@gmail.com</Text>
+                        </View>}
                         style={styles.listStyle}
-                        onPress={() => this.props.navigation.navigate('Backup')}
+                        delayLongPress={1000}
+                        onLongPress={() => {
+                            ToastAndroid.show('User logged out', ToastAndroid.SHORT)
+                        }}
                     />
                     <List.Item
                         title='Colors'
