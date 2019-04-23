@@ -6,7 +6,7 @@ import MainTabNavigator from './MainTabNavigator';
 import AboutPage from '../screens/settingsPage/AboutPage';
 import NotificationsPage from '../screens/settingsPage/NotficationsPage';
 import ColorsPage from '../screens/settingsPage/ColorsPage'
-import BackupPage from '../screens/settingsPage/BackupPage'
+// import BackupPage from '../screens/settingsPage/BackupPage'
 // import HomeScreen from '../screens/HomeScreen'
 // import AddEventScreen from '../screens/addEvents/AddEventScreen'
 // import AddActualEventScreen from '../screens/addEvents/AddActualEventScreen'
@@ -36,9 +36,9 @@ const ColorsStack = createStackNavigator({
     Color: { screen: ColorsPage }
 });
 
-const BackupStack = createStackNavigator({
-    BackRes: { screen: BackupPage }
-});
+// const BackupStack = createStackNavigator({
+//     BackRes: { screen: BackupPage }
+// });
 
 // Home Stacks
 // const AddEventStack = createStackNavigator({
@@ -62,7 +62,7 @@ export default createAppContainer(createSwitchNavigator(
         About: AboutStack,
         Notifications: NotificationStack,
         Color: ColorsStack,
-        Backup: BackupStack,
+        // Backup: BackupStack,
         // AddEvent: AddEventStack,
         // AddActualEvent: AddActualEventStack,
         // AddClass: AddClassStack,

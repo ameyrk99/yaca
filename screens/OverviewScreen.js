@@ -21,15 +21,15 @@ const eventProps = {
 
 const items = {
     '2019-04-26': [
-        { key: 'CSE 3320', color: eventProps.classes['CSE 3320'], text: 'Test 1', done: false },
-        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 2', done: false }
+        { key: 'CSE 3320', color: eventProps.classes['CSE 3320'], text: 'Test 1', done: false, important: true },
+        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 2', done: false, important: false }
     ],
     '2019-04-05': [
-        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Quiz 4', done: true }
+        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Quiz 4', done: true, important: false }
     ],
     '2019-04-20': [
-        { key: 'IE 3310', color: eventProps.classes['IE 3310'], text: 'Quiz 3', done: false },
-        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 3', done: true }
+        { key: 'IE 3310', color: eventProps.classes['IE 3310'], text: 'Quiz 3', done: false, important: true },
+        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 3', done: true, important: false }
     ],
 }
 
@@ -94,14 +94,18 @@ export default class HomeCalendar extends Component {
 
     renderItem = (item) => {
         return (
-            <View style={styles.item}>
-                <Text style={{ alignSelf: 'flex-start', textDecorationLine: item.done ? 'line-through' : 'none' }}>
+            <View style={[ styles.item, { backgroundColor: item.important ? 'red' : 'white' }]}>
+                <Text style={{ 
+                    alignSelf: 'flex-start',
+                    textDecorationLine: item.done ? 'line-through' : 'none',
+                    color: item.important ? 'white' : 'black'
+                }}>
                     {item.text} {item.done && <Text style={{ fontStyle: 'italic', color: 'gray' }}>(complete)</Text>}
                 </Text>
                 <Text style={{
                     alignSelf: 'flex-end',
                     textAlign: 'right',
-                    color: eventProps.classes[item.key],
+                    color: item.important ? 'white' : eventProps.classes[item.key],
                 }}>
                     {item.key}
                 </Text>
@@ -133,7 +137,7 @@ export default class HomeCalendar extends Component {
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: 'white',
+        // backgroundColor: 'white',
         alignContent: 'space-around',
         flex: 1,
         borderRadius: 5,
