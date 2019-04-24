@@ -14,6 +14,12 @@ import Colors from '../constants/Colors';
 
 // Don't delete db even though you never use it!!!!
 // Firebase throws an error for some reason
+// Dustin: importing db takes care of this block of code:
+/*
+    firebase.initializeApp(config); // Gets the data needed for correct database.
+    var db = firebase.firestore(); // Invokes firebase before app is initialized.
+*/
+
 import { db } from '../database/config';
 import firebase from 'firebase';
 
@@ -37,6 +43,7 @@ export default class HomeScreen extends React.Component {
                 text: '',
                 done: false,
                 important: false,
+                date: Date,
             }
         }
         this.onDayPress = this.onDayPress.bind(this)
@@ -253,9 +260,7 @@ export default class HomeScreen extends React.Component {
                                     const temp = this.state.newEvent
                                     temp.text = this.state.eventTitle
                                     temp.important = this.state.checked
-                                    this.setState({
-                                        newEvent: temp,
-                                    })
+                                    temp.date = this.state.selected
                                     this.setModalVisible(!this.state.modalVisible);
                                     ToastAndroid.show('Event Added', ToastAndroid.SHORT)
 
