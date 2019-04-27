@@ -38,13 +38,7 @@ export default class HomeScreen extends React.Component {
             modalVisible: false,
             checked: false,
             status: 'checked',
-            newEvent: {
-                key: '',
-                text: '',
-                done: false,
-                important: false,
-                date: Date,
-            }
+            newEventKey: '',
         }
         this.onDayPress = this.onDayPress.bind(this)
     }
@@ -76,7 +70,9 @@ export default class HomeScreen extends React.Component {
                         }}
                     />
 
-                    <Title style={{ padding: 5, color: 'white', backgroundColor: Colors.tintColor }}>{this.state.selected}</Title>
+                    <Divider style={{ backgroundColor: Colors.tintColor }} />
+
+                    <Title style={{ padding: 5, color: Colors.tintColor }}>{this.state.selected}</Title>
 
                     <ScrollView style={{ flex: 1, flexDirection: 'column', }}>
 
@@ -94,7 +90,6 @@ export default class HomeScreen extends React.Component {
                                         right={() => <View style={{ alignSelf: 'center' }}>
                                             <Text style={{
                                                 alignSelf: 'center',
-                                                // color: eventProps.classes[item.key],
                                                 paddingRight: 80,
                                                 color: item.important ? 'white' : eventProps.classes[item.key]
                                             }}>
@@ -123,12 +118,7 @@ export default class HomeScreen extends React.Component {
                     icon="add"
                     onPress={() => {
                         this.setState({
-                            newEvent: {
-                                key: '',
-                                text: '',
-                                done: false,
-                                important: false,
-                            },
+                            newEventKey: '',
                             checked: false,
                         })
                         this.setModalVisible(true);
@@ -148,7 +138,7 @@ export default class HomeScreen extends React.Component {
                         <TextInput
                             mode='outlined'
                             label='Add a title'
-                            style={{ height: 50, margin: 10 }}
+                            style={{ height: 60, margin: 5 }}
                             theme={{
                                 colors: {
                                     primary: Colors.tintColor,
@@ -168,7 +158,7 @@ export default class HomeScreen extends React.Component {
                                         status={this.state.checked ? 'checked' : 'unchecked'}
                                         onPress={() => { this.setState({ checked: !this.state.checked }); }}
                                     />}
-                                style={styles.listStyle}
+                                style={[styles.listStyle, {margin: 5}]}
                                 onPress={this._openMenu}
                             />
                         </List.Section>
@@ -180,9 +170,16 @@ export default class HomeScreen extends React.Component {
                                 anchor={
                                     <List.Section>
                                         <List.Item
-                                            title={this.state.newEvent.key == '' ? 'Pick event type' : this.state.newEvent.key}
-                                            left={() => <List.Icon icon='event-note' color={this.state.newEvent.key == '' ? 'black' : eventProps.classes[this.state.newEvent.key]} />}
-                                            style={[styles.listStyle, {paddingVertical: -20}]}
+                                            title={this.state.newEventKey == '' ? 'Pick event type' : this.state.newEventKey}
+                                            left={() => <List.Icon icon='event-note' color={
+                                                this.state.newEventKey == '' ? 
+                                                    'black' : 
+                                                        this.state.newEventKey == 'Meetings' ?
+                                                            eventProps['Meetings'] : 
+                                                            this.state.newEventKey == 'Misc Events' ? eventProps['Misc Events'] :
+                                                    eventProps.classes[this.state.newEventKey]
+                                            }/>}
+                                            style={[styles.listStyle, { margin: 5, paddingVertical: -20 }]}
                                             onPress={this._openMenu}
                                         />
                                     </List.Section>
@@ -195,10 +192,8 @@ export default class HomeScreen extends React.Component {
                                                 key={i}
                                                 title={c}
                                                 onPress={() => {
-                                                    const temp = this.state.newEvent
-                                                    temp.key = c
                                                     this.setState({
-                                                        newEvent: temp,
+                                                        newEventKey: c,
                                                         visible: false,
                                                     })
                                                 }}
@@ -216,22 +211,18 @@ export default class HomeScreen extends React.Component {
                                 <Menu.Item
                                     title='Meetings'
                                     onPress={() => {
-                                        const temp = this.state.newEvent
-                                        temp.key = 'Meetings'
                                         this.setState({
-                                            newEvent: temp,
+                                            newEventKey: 'Meetings',
                                             visible: false,
                                         })
                                     }}
                                     icon='event'
                                 />
                                 <Menu.Item
-                                    title='Misc. Events'
+                                    title='Misc Events'
                                     onPress={() => {
-                                        const temp = this.state.newEvent
-                                        temp.key = 'Misc. Events'
                                         this.setState({
-                                            newEvent: temp,
+                                            newEventKey: 'Misc Events',
                                             visible: false,
                                         })
                                     }}
@@ -257,17 +248,22 @@ export default class HomeScreen extends React.Component {
                                 color={Colors.tintColor}
                                 style={{ margin: 10 }}
                                 onPress={() => {
-                                    const temp = this.state.newEvent
-                                    temp.text = this.state.eventTitle
-                                    temp.important = this.state.checked
-                                    temp.date = this.state.selected
-                                    this.setModalVisible(!this.state.modalVisible);
-                                    ToastAndroid.show('Event Added', ToastAndroid.SHORT)
+
+                                    const temp = {
+                                        date: this.state.selected,
+                                        key: this.state.newEventKey,
+                                        text: this.state.eventTitle,
+                                        done: false,
+                                        important: this.state.checked,
+                                    }
 
                                     var newEventKey = firebase.database().ref().child('events').push().key
                                     var updates = {}
-                                    updates['/events/' + newEventKey] = this.state.newEvent
+                                    updates['/events/' + newEventKey] = temp
                                     firebase.database().ref().update(updates)
+
+                                    this.setModalVisible(!this.state.modalVisible);
+                                    ToastAndroid.show('Event Added', ToastAndroid.SHORT)
                                 }}>
                                 ADD
                             </Button>
@@ -328,7 +324,7 @@ const eventProps = {
         'IE 3310': 'green',
     },
     'Meetings': 'orange',
-    'Misc. Events': 'blue',
+    'Misc Events': 'blue',
 }
 
 const items = {
