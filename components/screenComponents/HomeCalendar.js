@@ -17,7 +17,7 @@ const eventProps = {
         'IE 3310': 'green',
     },
     'Meetings': 'orange',
-    'Misc. Events': 'blue',
+    'Misc Events': 'blue',
 }
 
 const items = {

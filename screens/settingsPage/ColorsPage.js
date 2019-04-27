@@ -13,32 +13,8 @@ import ColorPalette from 'react-native-color-palette';
 
 import Colors from '../../constants/Colors'
 
-const styles = StyleSheet.create({
-    iconStyle: {
-        marginLeft: 10,
-        marginRight: 5,
-        paddingRight: 30,
-        alignSelf: 'center',
-        justifyContent: 'center'
-    },
-    tempView: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
-    tempText: {
-        fontWeight: 'bold',
-        alignSelf: 'center',
-        fontSize: 15
-    },
-    listStyle: {
-        paddingVertical: -20,
-        borderRadius: 0,
-        borderWidth: 0.5,
-        borderColor: '#d6d7da',
-    }
-});
+import { db } from '../../database/config';
+import firebase from 'firebase';
 
 export default class ColorsPage extends React.Component {
 
@@ -56,7 +32,7 @@ export default class ColorsPage extends React.Component {
         events: {
             classes: {},
             'Meetings': 'orange',
-            'Misc. Events': 'blue',
+            'Misc Events': 'blue',
         },
         paletteVis: false,
         toChangeName: '-1',
@@ -131,7 +107,7 @@ export default class ColorsPage extends React.Component {
                         </View>
 
                         <View style={{ flex: 1 }}>
-                            {(this.state.toChangeName !== 'Misc. Events' && this.state.toChangeName !== 'Meetings') &&
+                            {(this.state.toChangeName !== 'Misc Events' && this.state.toChangeName !== 'Meetings') &&
                                 <TextInput
                                     style={{ height: 50 }}
                                     theme={{
@@ -176,7 +152,7 @@ export default class ColorsPage extends React.Component {
                                         let name = this.state.toChangeName
                                         let color = this.state.toChangeColor
 
-                                        if (name === 'Misc. Events' || name === 'Meetings') {
+                                        if (name === 'Misc Events' || name === 'Meetings') {
                                             tempC[name] = color
                                         } else {
                                             delete tempC.classes[name]
@@ -185,6 +161,18 @@ export default class ColorsPage extends React.Component {
                                             }
                                             tempC.classes[name] = color
                                         }
+
+                                        const otherEvents = {
+                                            'Meetings': this.state.events["Meetings"],
+                                            'Misc Events': this.state.events["Misc Events"]
+                                        }
+
+                                        let newEventPropsKey = firebase.database().ref().child('classProps').key
+                                        let otherEventsKey = firebase.database().ref().child('eventProps').key
+                                        var updates = {}
+                                        updates['/' + newEventPropsKey] = tempC.classes
+                                        updates['/' + otherEventsKey] = otherEvents
+                                        firebase.database().ref().update(updates)
 
                                         this.setState({
                                             events: tempC,
@@ -200,7 +188,7 @@ export default class ColorsPage extends React.Component {
                                     {this.state.addingClass ? 'ADD' : 'EDIT'}
                                 </Button>
 
-                                {(this.state.toChangeName !== 'Meetings' && this.state.toChangeName !== 'Misc. Events' && !this.state.addingClass) &&
+                                {(this.state.toChangeName !== 'Meetings' && this.state.toChangeName !== 'Misc Events' && !this.state.addingClass) &&
                                     <Button icon='delete'
                                         mode="contained"
                                         color='red'
@@ -208,12 +196,18 @@ export default class ColorsPage extends React.Component {
                                         onPress={() => {
                                             let tempC = this.state.events
                                             delete tempC.classes[this.state.toChangeName]
+
                                             this.setState({
                                                 events: tempC,
                                                 toChangeName: '-1',
                                                 toChangeColor: '#000',
                                                 text: '',
                                             })
+
+                                            let newEventPropsKey = firebase.database().ref().child('classProps').key
+                                            var updates = {}
+                                            updates['/' + newEventPropsKey] = tempC.classes
+                                            firebase.database().ref().update(updates)
                                             this.setpaletteVis(false);
                                         }}
                                     >
@@ -277,12 +271,12 @@ export default class ColorsPage extends React.Component {
 
                     <List.Item
                         key={7}
-                        title='Misc. Events'
-                        right={() => <List.Icon icon='format-color-fill' color={this.state.events['Misc. Events']} />}
+                        title='Misc Events'
+                        right={() => <List.Icon icon='format-color-fill' color={this.state.events['Misc Events']} />}
                         style={styles.listStyle}
                         onPress={() => {
                             this.setState({
-                                toChangeName: 'Misc. Events'
+                                toChangeName: 'Misc Events'
                             })
                             this.setpaletteVis(true);
                         }}
@@ -295,3 +289,30 @@ export default class ColorsPage extends React.Component {
     }
 }
 
+
+const styles = StyleSheet.create({
+    iconStyle: {
+        marginLeft: 10,
+        marginRight: 5,
+        paddingRight: 30,
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    tempView: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+    },
+    tempText: {
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        fontSize: 15
+    },
+    listStyle: {
+        paddingVertical: -20,
+        borderRadius: 0,
+        borderWidth: 0.5,
+        borderColor: '#d6d7da',
+    }
+});
