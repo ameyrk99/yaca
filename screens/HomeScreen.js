@@ -33,12 +33,13 @@ export default class HomeScreen extends React.Component {
         let d = new Date()
         this.state = {
             selected: d.toISOString().split('T')[0],
-            items: items,
+            items: tempItems,
             visible: false,
             modalVisible: false,
             checked: false,
             status: 'checked',
             newEventKey: '',
+            refreshing: false,
         }
         this.onDayPress = this.onDayPress.bind(this)
     }
@@ -48,6 +49,8 @@ export default class HomeScreen extends React.Component {
     _closeMenu = () => this.setState({ visible: false });
 
     render() {
+
+        let markedEvents = JSON.parse(JSON.stringify(this.state.items))
 
         return (
             <View style={{ flex: 1 }}>
@@ -60,7 +63,7 @@ export default class HomeScreen extends React.Component {
                         horizontal
                         pagingEnabled
                         markingType={'multi-dot'}
-                        markedDates={this.state.items}
+                        markedDates={markedEvents}
 
                         theme={{
                             selectedDayBackgroundColor: Colors.tintColor,
@@ -78,14 +81,14 @@ export default class HomeScreen extends React.Component {
 
                         <List.Section>
                             {
-                                items[this.state.selected] ? (items[this.state.selected].dots.map((item, i) =>
+                                this.state.items[this.state.selected] ? (this.state.items[this.state.selected].dots.map((item, i) =>
                                     <List.Item
                                         key={i}
                                         title={<Text style={{
                                             textDecorationLine: item.done ? 'line-through' : 'none',
                                             color: item.important ? 'white' : 'black',
                                         }}>
-                                            {item.text} {item.done && <Text style={{ fontStyle: 'italic', color: 'gray' }}>(complete)</Text>}
+                                            {item.text} {item.done && <Text style={{ fontStyle: 'italic', color: item.important ? 'white' : 'gray' }}>(complete)</Text>}
                                         </Text>}
                                         right={() => <View style={{ alignSelf: 'center' }}>
                                             <Text style={{
@@ -96,6 +99,22 @@ export default class HomeScreen extends React.Component {
                                                 {item.key}
                                             </Text>
                                         </View>}
+                                        onPress={() => {
+                                            const temp = this.state.items
+                                            temp[this.state.selected].dots[i].done = !this.state.items[this.state.selected].dots[i].done
+                                            this.setState({
+                                                items: temp,
+                                            })
+                                        }}
+                                        delayLongPress={1000}
+                                        onLongPress={() => {
+                                            const temp = this.state.items
+                                            delete temp[this.state.selected].dots[i]
+                                            this.setState({
+                                                items: temp,
+                                                refreshing: true,
+                                            })
+                                        }}
                                         style={[
                                             styles.emptyEvent,
                                             { backgroundColor: item.important ? 'red' : 'white' }
@@ -158,7 +177,7 @@ export default class HomeScreen extends React.Component {
                                         status={this.state.checked ? 'checked' : 'unchecked'}
                                         onPress={() => { this.setState({ checked: !this.state.checked }); }}
                                     />}
-                                style={[styles.listStyle, {margin: 5}]}
+                                style={[styles.listStyle, { margin: 5 }]}
                                 onPress={this._openMenu}
                             />
                         </List.Section>
@@ -172,13 +191,13 @@ export default class HomeScreen extends React.Component {
                                         <List.Item
                                             title={this.state.newEventKey == '' ? 'Pick event type' : this.state.newEventKey}
                                             left={() => <List.Icon icon='event-note' color={
-                                                this.state.newEventKey == '' ? 
-                                                    'black' : 
-                                                        this.state.newEventKey == 'Meetings' ?
-                                                            eventProps['Meetings'] : 
-                                                            this.state.newEventKey == 'Misc Events' ? eventProps['Misc Events'] :
-                                                    eventProps.classes[this.state.newEventKey]
-                                            }/>}
+                                                this.state.newEventKey == '' ?
+                                                    'black' :
+                                                    this.state.newEventKey == 'Meetings' ?
+                                                        eventProps['Meetings'] :
+                                                        this.state.newEventKey == 'Misc Events' ? eventProps['Misc Events'] :
+                                                            eventProps.classes[this.state.newEventKey]
+                                            } />}
                                             style={[styles.listStyle, { margin: 5, paddingVertical: -20 }]}
                                             onPress={this._openMenu}
                                         />
@@ -327,7 +346,7 @@ const eventProps = {
     'Misc Events': 'blue',
 }
 
-const items = {
+const tempItems = {
     '2019-04-26': {
         dots: [
             { key: 'CSE 3320', color: eventProps.classes['CSE 3320'], text: 'Test 1', done: false, important: true },

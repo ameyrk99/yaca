@@ -137,7 +137,6 @@ export default class HomeCalendar extends Component {
 
 const styles = StyleSheet.create({
     item: {
-        // backgroundColor: 'white',
         alignContent: 'space-around',
         flex: 1,
         borderRadius: 5,
@@ -158,7 +157,6 @@ const styles = StyleSheet.create({
         paddingTop: 45,
         alignSelf: 'center',
         flexDirection: 'column',
-        // backgroundColor: 'white',
         alignContent: 'center'
     }
 });
