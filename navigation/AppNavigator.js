@@ -40,7 +40,7 @@ const ColorsStack = createStackNavigator({
 const UserLogStack = createStackNavigator({
     LogOn: { screen: UserLogPage }
 }, {
-    headerMode: 'none',
+        headerMode: 'none',
         navigationOptions: {
             headerVisible: false,
         }
@@ -78,6 +78,6 @@ export default createAppContainer(createSwitchNavigator(
         // AddActualEvent: AddActualEventStack,
         // AddClass: AddClassStack,
     }, {
-        initialRouteName: 'LogOn'
+        initialRouteName: 'LogOn',
     }
 ));

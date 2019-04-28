@@ -71,7 +71,7 @@ export default class AboutPage extends React.Component {
                                     <List.Item
                                         key={i}
                                         title={l}
-                                        right={() => <List.Icon icon='web' />}
+                                        right={() => <List.Icon icon='link' />}
                                         style={styles.listStyle}
                                         onPress={() => WebBrowser.openBrowserAsync(libs[l])}
                                     />

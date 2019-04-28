@@ -92,7 +92,7 @@ export default class HomeCalendar extends Component {
             this.setState({
                 isLoadingData: false,
             })
-        }, 20)
+        }, 100)
     }
 
     componentDidMount = () => {
