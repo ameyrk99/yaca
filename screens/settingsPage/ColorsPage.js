@@ -16,6 +16,16 @@ import firebase from 'firebase';
 
 export default class ColorsPage extends React.Component {
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            headerTitle: 'Color Settings',
+            headerLeft: (
+                <Ionicons style={{ paddingLeft: 22 }} onPress={navigation.getParam('goBack')}
+                    name="ios-arrow-back" size={32} color={Colors.tintColor} />
+            ),
+        };
+    };
+
     state = {
         events: {
             classes: {},
@@ -29,16 +39,6 @@ export default class ColorsPage extends React.Component {
         text: '',
         tempValBase: 'asdfasdgasdfasdf',
     }
-
-    static navigationOptions = ({ navigation }) => {
-        return {
-            headerTitle: 'Color Settings',
-            headerLeft: (
-                <Ionicons style={{ paddingLeft: 22 }} onPress={navigation.getParam('goBack')}
-                    name="md-arrow-back" size={32} color={Colors.tintColor} />
-            ),
-        };
-    };
 
     fetchClasses = () => {
         firebase.database().ref().child('classProps').once('value', (snapshot) => {
@@ -334,8 +334,8 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         paddingVertical: -20,
-        borderRadius: 0,
-        borderWidth: 0.5,
-        borderColor: '#d6d7da',
+        // borderRadius: 0,
+        // borderWidth: 0.5,
+        // borderColor: '#d6d7da',
     }
 });

@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         paddingVertical: -20,
-        borderRadius: 0,
-        borderWidth: 0.5,
-        borderColor: '#d6d7da',
+        // borderRadius: 0,
+        // borderWidth: 0.5,
+        // borderColor: '#d6d7da',
     }
 });
 
@@ -82,7 +82,7 @@ export default class HomeScreen extends React.Component {
                 </List.Section>
                 <View style={styles.tempView} >
                     <Title>YACA</Title>
-                    <Caption>alpha 0.2019.04.18</Caption>
+                    <Caption>alpha 0.2019.04.28</Caption>
                 </View>
             </View>
         );

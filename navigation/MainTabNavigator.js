@@ -18,11 +18,11 @@ const HomeStack = createStackNavigator({
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
-  tabBarIcon: (
+  tabBarIcon: ({ tintColor }) =>
     <TabBarIcon
+      color={tintColor}
       name='md-home'
     />
-  ),
 };
 
 const OverviewStack = createStackNavigator({
@@ -31,11 +31,11 @@ const OverviewStack = createStackNavigator({
 
 OverviewStack.navigationOptions = {
   tabBarLabel: 'Overview',
-  tabBarIcon: (
+  tabBarIcon: ({ tintColor }) =>
     <TabBarIcon
+      color={tintColor}
       name='md-calendar'
     />
-  ),
 };
 
 // const AddEventStack = createStackNavigator({
@@ -70,11 +70,11 @@ const SettingsStack = createStackNavigator({
 
 SettingsStack.navigationOptions = {
   tabBarLabel: 'Settings',
-  tabBarIcon: (
+  tabBarIcon: ({ tintColor }) =>
     <TabBarIcon
+      color={tintColor}
       name='md-settings'
     />
-  ),
 };
 
 export default createMaterialBottomTabNavigator({
@@ -82,10 +82,11 @@ export default createMaterialBottomTabNavigator({
   OverviewStack,
   SettingsStack,
 }, {
+    resetOnBlur: true,
     shifting: true,
     barStyle: {
-      backgroundColor: Colors.tintColor,
+      backgroundColor: '#FFFFFF',
     },
-    activeColor: '#FFFFFF',
+    activeTintColor: Colors.tintColor
   }
 );

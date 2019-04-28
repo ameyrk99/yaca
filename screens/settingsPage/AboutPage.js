@@ -34,7 +34,7 @@ export default class AboutPage extends React.Component {
             headerTitle: 'About YACA',
             headerLeft: (
                 <Ionicons style={{ paddingLeft: 22 }} onPress={navigation.getParam('goBack')}
-                    name="md-arrow-back" size={32} color={Colors.tintColor} />
+                    name="ios-arrow-back" size={32} color={Colors.tintColor} />
             ),
         };
     };
@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         paddingVertical: -20,
-        borderRadius: 0,
-        borderWidth: 0.5,
-        borderColor: '#d6d7da',
+        // borderRadius: 0,
+        // borderWidth: 0.5,
+        // borderColor: '#d6d7da',
     }
 })
