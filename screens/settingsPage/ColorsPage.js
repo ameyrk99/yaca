@@ -1,13 +1,11 @@
-// Shared preferences
 import React from 'react';
 import {
     StyleSheet,
     ScrollView,
     View,
     Modal,
-    AsyncStorage,
 } from 'react-native';
-import { Caption, Title, List, Text, Button, TextInput } from 'react-native-paper';
+import { Caption, List, Text, Button, TextInput } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import ColorPalette from 'react-native-color-palette';
 
