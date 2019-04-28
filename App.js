@@ -1,7 +1,15 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { AppLoading, Asset, Font, Icon } from 'expo';
+import { Platform, StatusBar, StyleSheet, View, ToastAndroid, TouchableOpacity } from 'react-native';
+import { AppLoading, Asset, Font, Icon, Google } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from './constants/Colors'
+import { Text, Caption, Title, List } from 'react-native-paper';
+
+//
+import { db } from './database/config';
+import firebase from 'firebase';
+//
 
 export default class App extends React.Component {
     state = {
@@ -61,3 +69,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
 });
+
+const LogIn = props => {
+  return (
+    <View style={{ flex: 1, flexDirection: 'column', paddingTop: 155 }}>
+    <TouchableOpacity
+    style={styles.touchStyle}
+    onPress={props.signIn}
+    >
+    <Text style={{textAlign: "center",}}>  *test* Please Login Before Using *test* </Text>
+    <Ionicons style={styles.iconStyle} name="logo-google" size={150} color={Colors.tintColor} />
+    </TouchableOpacity>
+    </View>
+  )
+}
+
