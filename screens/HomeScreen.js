@@ -162,6 +162,7 @@ export default class HomeScreen extends React.Component {
                                         }}
                                         delayLongPress={1000}
                                         onLongPress={() => {
+                                            firebase.database().ref().child('events').child(item.newEventKey).remove()
                                             const temp = this.state.items
                                             delete temp[this.state.selected].dots[i]
                                             this.setState({
@@ -323,6 +324,7 @@ export default class HomeScreen extends React.Component {
                                 onPress={() => {
 
                                     const temp = {
+                                        newEventKey: firebase.database().ref().child('events').push().key,
                                         date: this.state.selected,
                                         key: this.state.newEventKey,
                                         text: this.state.eventTitle,
@@ -330,9 +332,8 @@ export default class HomeScreen extends React.Component {
                                         important: this.state.checked,
                                     }
 
-                                    var newEventKey = firebase.database().ref().child('events').push().key
                                     var updates = {}
-                                    updates['/events/' + newEventKey] = temp
+                                    updates['/events/' + temp.newEventKey] = temp
                                     firebase.database().ref().update(updates)
 
                                     this.setModalVisible(!this.state.modalVisible);
