@@ -113,7 +113,7 @@ export default class HomeScreen extends React.Component {
             this.setState({
                 isLoadingData: false,
             })
-        }, 15)
+        }, 100)
     }
 
     componentDidMount = () => {

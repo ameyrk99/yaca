@@ -23,10 +23,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false
     },
     "android": {
-        "package": "com.yaca.yacadev"
+        "package": "com.yaca.yacadev",
+        "googleServicesFile": "./google-services.json"
     }
   }
 }
