@@ -2,6 +2,7 @@ import React from 'react';
 import {
     StyleSheet,
     View,
+    ToastAndroid,
 } from 'react-native';
 import { Text, Caption, Title, List } from 'react-native-paper';
 
@@ -53,8 +54,12 @@ export default class HomeScreen extends React.Component {
                             <Text style={{ alignSelf: 'center', color: 'gray', paddingRight: 12 }}>user.name@gmail.com</Text>
                         </View>}
                         style={styles.listStyle}
+                        onPress={() => {
+                            ToastAndroid.show('Long press to log out', ToastAndroid.SHORT)
+                        }}
                         delayLongPress={1000}
                         onLongPress={() => {
+                            this.props.navigation.navigate('LogOn')
                             ToastAndroid.show('User logged out', ToastAndroid.SHORT)
                         }}
                     />

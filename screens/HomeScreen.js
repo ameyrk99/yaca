@@ -6,7 +6,7 @@ import {
     ScrollView,
     ToastAndroid
 } from 'react-native';
-import { Title, List, Text, Button, FAB, TextInput, Menu, Divider, Provider, Checkbox } from 'react-native-paper';
+import { Title, List, Text, Button, FAB, TextInput, Menu, Divider, Provider, Checkbox, ActivityIndicator } from 'react-native-paper';
 import Emoji from 'react-native-emoji';
 import { CalendarList } from 'react-native-calendars';
 
@@ -45,6 +45,7 @@ export default class HomeScreen extends React.Component {
             status: 'checked',
             newEventKey: '',
             eventTitle: '',
+            isLoadingData: true,
         }
         this.onDayPress = this.onDayPress.bind(this)
     }
@@ -94,7 +95,6 @@ export default class HomeScreen extends React.Component {
             })
         })
     }
-
     update = () => {
         this.setState({
             items: {},
@@ -103,10 +103,17 @@ export default class HomeScreen extends React.Component {
                 'Meetings': null,
                 'Misc Events': null,
             },
+            isLoadingData: true,
         })
         this.fetchEvents()
         this.fetchClasses()
         this.fetchAgendaEvents()
+
+        setTimeout(() => {
+            this.setState({
+                isLoadingData: false,
+            })
+        }, 15)
     }
 
     componentDidMount = () => {
@@ -123,7 +130,12 @@ export default class HomeScreen extends React.Component {
         const tempDisDate = new Date(this.state.selected)
         const tempDate = tempDisDate.toUTCString().split(' 00:00:00 ')[0] 
 
-        return (
+        return this.state.isLoadingData ?
+            (
+                <View style={[styles.container, styles.horizontal]}>
+                    <ActivityIndicator size="large" color={Colors.tintColor} />
+                </View>
+            ) : (
             <View style={{ flex: 1 }}>
 
                 <View style={{ flex: 1 }}>
@@ -411,5 +423,9 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         borderWidth: 1,
         borderColor: '#d6d7da',
-    }
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center'
+    },
 })
