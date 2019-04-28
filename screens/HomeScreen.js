@@ -33,7 +33,12 @@ export default class HomeScreen extends React.Component {
         let d = new Date()
         this.state = {
             selected: d.toISOString().split('T')[0],
-            items: tempItems,
+            items: {},
+            events: {
+                classes: {},
+                'Meetings': null,
+                'Misc Events': null,
+            },
             visible: false,
             modalVisible: false,
             checked: false,
@@ -42,6 +47,55 @@ export default class HomeScreen extends React.Component {
             refreshing: false,
         }
         this.onDayPress = this.onDayPress.bind(this)
+    }
+
+    fetchClasses = () => {
+        firebase.database().ref().child('classProps').once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const tempc = this.state.events
+                tempc.classes[childSnapshot.key] = childSnapshot.val()
+                this.setState({
+                    events: tempc,
+                })
+            })
+        })
+    }
+
+    fetchEvents = () => {
+        firebase.database().ref().child('eventProps').once('value', snapshot => {
+            const tempe = this.state.events
+            tempe['Meetings'] = snapshot.child('Meetings').val()
+            tempe['Misc Events'] = snapshot.child('Misc Events').val()
+            this.setState({
+                events: tempe,
+            })
+        })
+    }
+
+    fetchAgendaEvents = () => {
+        firebase.database().ref().child('events').once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const tempc = this.state.items
+                const date_now = childSnapshot.child('date').val()
+                tempc[date_now] = {
+                    dots: [],
+                }
+
+                const tempData = childSnapshot.val()
+                tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events' ) ? 
+                    this.state.events[tempData.key] : this.state.events.classes[tempData.key]
+                tempc[date_now].dots.push(tempData)
+                this.setState({
+                    items: tempc,
+                })
+            })
+        })
+    }
+
+    componentDidMount = () => {
+        this.fetchEvents()
+        this.fetchClasses()
+        this.fetchAgendaEvents()
     }
 
     _openMenu = () => this.setState({ visible: true });
@@ -94,7 +148,7 @@ export default class HomeScreen extends React.Component {
                                             <Text style={{
                                                 alignSelf: 'center',
                                                 paddingRight: 80,
-                                                color: item.important ? 'white' : eventProps.classes[item.key]
+                                                color: item.important ? 'white' : this.state.events.classes[item.key]
                                             }}>
                                                 {item.key}
                                             </Text>
@@ -194,9 +248,9 @@ export default class HomeScreen extends React.Component {
                                                 this.state.newEventKey == '' ?
                                                     'black' :
                                                     this.state.newEventKey == 'Meetings' ?
-                                                        eventProps['Meetings'] :
-                                                        this.state.newEventKey == 'Misc Events' ? eventProps['Misc Events'] :
-                                                            eventProps.classes[this.state.newEventKey]
+                                                        this.state.events['Meetings'] :
+                                                        this.state.newEventKey == 'Misc Events' ? this.state.events['Misc Events'] :
+                                                        this.state.events.classes[this.state.newEventKey]
                                             } />}
                                             style={[styles.listStyle, { margin: 5, paddingVertical: -20 }]}
                                             onPress={this._openMenu}
@@ -205,7 +259,7 @@ export default class HomeScreen extends React.Component {
                                 }
                             >
                                 {
-                                    Object.keys(eventProps.classes).reverse().map((c, i) => {
+                                    Object.keys(this.state.events.classes).reverse().map((c, i) => {
                                         return (
                                             <Menu.Item
                                                 key={i}
@@ -218,7 +272,7 @@ export default class HomeScreen extends React.Component {
                                                 }}
                                                 icon='class'
                                                 style={{
-                                                    textDecorationColor: eventProps.classes[c],
+                                                    textDecorationColor: this.state.events.classes[c],
                                                 }}
                                             />
                                         )
@@ -335,33 +389,3 @@ const styles = StyleSheet.create({
         borderColor: '#d6d7da',
     }
 })
-
-const eventProps = {
-    classes: {
-        'CSE 3320': 'red',
-        'CSE 3310': 'blue',
-        'IE 3310': 'green',
-    },
-    'Meetings': 'orange',
-    'Misc Events': 'blue',
-}
-
-const tempItems = {
-    '2019-04-26': {
-        dots: [
-            { key: 'CSE 3320', color: eventProps.classes['CSE 3320'], text: 'Test 1', done: false, important: true },
-            { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 2', done: false, important: false }
-        ]
-    },
-    '2019-04-05': {
-        dots: [
-            { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Quiz 4', done: true, important: false }
-        ]
-    },
-    '2019-04-20': {
-        dots: [
-            { key: 'IE 3310', color: eventProps.classes['IE 3310'], text: 'Quiz 3', done: false, important: true },
-            { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 3', done: true, important: false }
-        ]
-    },
-}
