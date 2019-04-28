@@ -92,10 +92,14 @@ export default class HomeScreen extends React.Component {
         })
     }
 
-    componentDidMount = () => {
+    update = () => {
         this.fetchEvents()
         this.fetchClasses()
         this.fetchAgendaEvents()
+    }
+
+    componentDidMount = () => {
+        this.update();
     }
 
     _openMenu = () => this.setState({ visible: true });
@@ -169,6 +173,8 @@ export default class HomeScreen extends React.Component {
                                                 items: temp,
                                                 refreshing: true,
                                             })
+
+                                            this.update();
                                         }}
                                         style={[
                                             styles.emptyEvent,
@@ -338,6 +344,8 @@ export default class HomeScreen extends React.Component {
 
                                     this.setModalVisible(!this.state.modalVisible);
                                     ToastAndroid.show('Event Added', ToastAndroid.SHORT)
+
+                                    this.update();
                                 }}>
                                 ADD
                             </Button>
