@@ -16,23 +16,18 @@ import firebase from 'firebase';
 
 export default class ColorsPage extends React.Component {
 
-    constructor(props) {
-        super(props)
-        state = {
-            events: {
-                classes: {},
-                'Meetings': null,
-                'Misc Events': null,
-            },
-            paletteVis: false,
-            toChangeName: '-1',
-            toChangeColor: '#000',
-            addingClass: false,
-            text: ''
-        }
-
-        this.fetchClasses()
-        this.fetchEvents()
+    state = {
+        events: {
+            classes: {},
+            'Meetings': null,
+            'Misc Events': null,
+        },
+        paletteVis: false,
+        toChangeName: '-1',
+        toChangeColor: '#000',
+        addingClass: false,
+        text: '',
+        tempValBase: 'asdfasdgasdfasdf',
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -45,28 +40,33 @@ export default class ColorsPage extends React.Component {
         };
     };
 
-    
-
     fetchClasses = () => {
-        firebase.database().ref().child('classProps').on('value', snapshot => {
-            this.setState({
-                classes: snapshot.child('classProps').val(),
+        firebase.database().ref().child('classProps').once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const tempc = this.state.events
+                tempc.classes[childSnapshot.key] = childSnapshot.val()
+                this.setState({
+                    events: tempc,
+                })
             })
         })
     }
 
     fetchEvents = () => {
         firebase.database().ref().child('eventProps').on('value', snapshot => {
-            console.log(snapshot.child('Meetings').val())
+            const tempe = this.state.events
+            tempe['Meetings'] = snapshot.child('Meetings').val()
+            tempe['Misc Events'] = snapshot.child('Misc Events').val()
             this.setState({
-                'Meetings': snapshot.child('Meetings').val(),
-                'Misc Events': snapshot.child('Misc Events').val(),
+                events: tempe,
             })
         })
     }
 
     componentDidMount() {
-        this.props.navigation.setParams({ goBack: this._goBack });
+        this.props.navigation.setParams({ goBack: this._goBack })
+        this.fetchEvents()
+        this.fetchClasses()
     }
 
     _goBack = () => {
@@ -264,7 +264,7 @@ export default class ColorsPage extends React.Component {
                         })
                     }
 
-                    {(Object.keys(this.state.events.classes).length < 8) &&
+                    {(Object.keys(classes).length < 8) &&
                         <List.Item
                             title='Add Class'
                             left={() => <List.Icon icon='add' />}
@@ -276,8 +276,7 @@ export default class ColorsPage extends React.Component {
                                 })
                                 this.setpaletteVis(true)
                             }}
-                        />
-                    }
+                        />}
 
                     <List.Subheader>Other Events</List.Subheader>
                     <List.Item
