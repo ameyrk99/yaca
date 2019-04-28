@@ -18,7 +18,7 @@ import Colors from '../../constants/Colors'
 export default class UserLogPage extends React.Component {
 
     state = {
-        userID: 'KJJBNjo9xifFgkw3W5nG0aQh4lD3',
+        userID: firebase.auth().currentUser,
     }
 
     componentDidMount() {

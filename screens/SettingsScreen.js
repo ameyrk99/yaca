@@ -7,6 +7,8 @@ import {
 import { Text, Caption, Title, List } from 'react-native-paper';
 
 import Colors from '../constants/Colors'
+import { db } from '../database/config';
+import firebase from 'firebase';
 
 const styles = StyleSheet.create({
     iconStyle: {
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
     }
 });
 
+
 export default class HomeScreen extends React.Component {
 
     static navigationOptions = {
@@ -41,6 +44,9 @@ export default class HomeScreen extends React.Component {
 
     constructor() {
         super();
+        this.state = {
+            email: firebase.auth().currentUser.email,
+        }
     }
 
     render() {
@@ -51,7 +57,7 @@ export default class HomeScreen extends React.Component {
                         title='Logout'
                         left={() => <List.Icon icon='account-circle' />}
                         right={() => <View style={{ alignSelf: 'center' }}>
-                            <Text style={{ alignSelf: 'center', color: 'gray', paddingRight: 12 }}>user.name@gmail.com</Text>
+                            <Text style={{ alignSelf: 'center', color: 'gray', paddingRight: 12 }}>{this.state.email}</Text>
                         </View>}
                         style={styles.listStyle}
                         onPress={() => {
@@ -59,8 +65,10 @@ export default class HomeScreen extends React.Component {
                         }}
                         delayLongPress={1000}
                         onLongPress={() => {
-                            this.props.navigation.navigate('LogOn')
-                            ToastAndroid.show('User logged out', ToastAndroid.SHORT)
+                            firebase.auth().signOut().then(() => {
+                                this.props.navigation.navigate('LogOn')
+                                ToastAndroid.show('User logged out', ToastAndroid.SHORT)
+                            })
                         }}
                     />
                     <List.Item

@@ -32,7 +32,7 @@ export default class HomeScreen extends React.Component {
         super(props)
         let d = new Date()
         this.state = {
-            userID: 'KJJBNjo9xifFgkw3W5nG0aQh4lD3',
+            userID: firebase.auth().currentUser.uid,
             items: {},
             events: {
                 classes: {},
@@ -52,6 +52,7 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchClasses = () => {
+        
         firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.events
