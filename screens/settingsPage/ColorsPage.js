@@ -18,6 +18,25 @@ import firebase from 'firebase';
 
 export default class ColorsPage extends React.Component {
 
+    constructor(props) {
+        super(props)
+        state = {
+            events: {
+                classes: {},
+                'Meetings': null,
+                'Misc Events': null,
+            },
+            paletteVis: false,
+            toChangeName: '-1',
+            toChangeColor: '#000',
+            addingClass: false,
+            text: ''
+        }
+
+        this.fetchClasses()
+        this.fetchEvents()
+    }
+
     static navigationOptions = ({ navigation }) => {
         return {
             headerTitle: 'Color Settings',
@@ -28,17 +47,24 @@ export default class ColorsPage extends React.Component {
         };
     };
 
-    state = {
-        events: {
-            classes: {},
-            'Meetings': 'orange',
-            'Misc Events': 'blue',
-        },
-        paletteVis: false,
-        toChangeName: '-1',
-        toChangeColor: '#000',
-        addingClass: false,
-        text: ''
+    
+
+    fetchClasses = () => {
+        firebase.database().ref().child('classProps').on('value', snapshot => {
+            this.setState({
+                classes: snapshot.child('classProps').val(),
+            })
+        })
+    }
+
+    fetchEvents = () => {
+        firebase.database().ref().child('eventProps').on('value', snapshot => {
+            console.log(snapshot.child('Meetings').val())
+            this.setState({
+                'Meetings': snapshot.child('Meetings').val(),
+                'Misc Events': snapshot.child('Misc Events').val(),
+            })
+        })
     }
 
     componentDidMount() {
