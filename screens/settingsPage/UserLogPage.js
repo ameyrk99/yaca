@@ -18,7 +18,7 @@ import Colors from '../../constants/Colors'
 export default class UserLogPage extends React.Component {
 
     state = {
-        isUserLoggedIn: false,
+        userID: 'KJJBNjo9xifFgkw3W5nG0aQh4lD3',
     }
 
     componentDidMount() {
@@ -45,7 +45,7 @@ export default class UserLogPage extends React.Component {
                         })
                             .then(() => {
                                 this.setState({
-                                    isUserLoggedIn: true,
+                                    userID: userID,
                                 })
                                 ToastAndroid.show('User logged in', ToastAndroid.SHORT)
                             })
@@ -67,10 +67,10 @@ export default class UserLogPage extends React.Component {
 
     render() {
 
-        if (this.state.isUserLoggedIn) {
-            this.goBack
+        if (this.state.userID) {
+            this._goBack()
+            return <View></View>
         } else {
-
             return (
                 <View style={{ flex: 1 }}>
                     <TouchableOpacity

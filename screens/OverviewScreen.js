@@ -21,6 +21,7 @@ export default class HomeCalendar extends Component {
     };
 
     state = {
+        userID: 'KJJBNjo9xifFgkw3W5nG0aQh4lD3',
         items: {},
         events: {
             classes: {},
@@ -31,7 +32,7 @@ export default class HomeCalendar extends Component {
     }
 
     fetchClasses = () => {
-        firebase.database().ref().child('classProps').once('value', (snapshot) => {
+        firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.events
                 tempc.classes[childSnapshot.key] = childSnapshot.val()
@@ -43,7 +44,7 @@ export default class HomeCalendar extends Component {
     }
 
     fetchEvents = () => {
-        firebase.database().ref().child('eventProps').once('value', snapshot => {
+        firebase.database().ref('/users/'+this.state.userID).child('eventProps').once('value', snapshot => {
             const tempe = this.state.events
             tempe['Meetings'] = snapshot.child('Meetings').val()
             tempe['Misc Events'] = snapshot.child('Misc Events').val()
@@ -54,7 +55,7 @@ export default class HomeCalendar extends Component {
     }
 
     fetchAgendaEvents = () => {
-        firebase.database().ref().child('events').once('value', (snapshot) => {
+        firebase.database().ref('/users/'+this.state.userID).child('events').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.items
                 const date_now = childSnapshot.child('date').val()

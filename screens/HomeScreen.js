@@ -32,6 +32,7 @@ export default class HomeScreen extends React.Component {
         super(props)
         let d = new Date()
         this.state = {
+            userID: 'KJJBNjo9xifFgkw3W5nG0aQh4lD3',
             items: {},
             events: {
                 classes: {},
@@ -51,7 +52,7 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchClasses = () => {
-        firebase.database().ref().child('classProps').once('value', (snapshot) => {
+        firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.events
                 tempc.classes[childSnapshot.key] = childSnapshot.val()
@@ -63,7 +64,7 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchEvents = () => {
-        firebase.database().ref().child('eventProps').once('value', snapshot => {
+        firebase.database().ref('/users/'+this.state.userID).child('eventProps').once('value', snapshot => {
             const tempe = this.state.events
             tempe['Meetings'] = snapshot.child('Meetings').val()
             tempe['Misc Events'] = snapshot.child('Misc Events').val()
@@ -74,7 +75,7 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchAgendaEvents = () => {
-        firebase.database().ref().child('events').once('value', (snapshot) => {
+        firebase.database().ref('/users/'+this.state.userID).child('events').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.items
                 const date_now = childSnapshot.child('date').val()
@@ -189,11 +190,11 @@ export default class HomeScreen extends React.Component {
                                             this.setState({
                                                 items: temp,
                                             })
-                                            firebase.database().ref().child('events').child(item.newEventKey).child('done').set(newMark)
+                                            firebase.database().ref('/users/'+this.state.userID).child('events').child(item.newEventKey).child('done').set(newMark)
                                         }}
                                         delayLongPress={1000}
                                         onLongPress={() => {
-                                            firebase.database().ref().child('events').child(item.newEventKey).remove()
+                                            firebase.database().ref('/users/'+this.state.userID).child('events').child(item.newEventKey).remove()
                                             const temp = this.state.items
                                             delete temp[this.state.selected].dots[i]
                                             this.setState({
@@ -357,7 +358,7 @@ export default class HomeScreen extends React.Component {
                                 onPress={() => {
 
                                     const temp = {
-                                        newEventKey: firebase.database().ref().child('events').push().key,
+                                        newEventKey: firebase.database().ref('/users/'+this.state.userID).child('events').push().key,
                                         date: this.state.selected,
                                         key: this.state.newEventKey,
                                         text: this.state.eventTitle,
@@ -367,7 +368,7 @@ export default class HomeScreen extends React.Component {
 
                                     var updates = {}
                                     updates['/events/' + temp.newEventKey] = temp
-                                    firebase.database().ref().update(updates)
+                                    firebase.database().ref('/users/'+this.state.userID).update(updates)
 
                                     this.setModalVisible(!this.state.modalVisible);
                                     ToastAndroid.show('Event Added', ToastAndroid.SHORT)
