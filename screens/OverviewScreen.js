@@ -9,29 +9,10 @@ import Emoji from 'react-native-emoji';
 
 import Colors from '../constants/Colors';
 
-const eventProps = {
-    classes: {
-        'CSE 3320': 'red',
-        'CSE 3310': 'blue',
-        'IE 3310': 'green',
-    },
-    'Meetings': 'orange',
-    'Misc Events': 'blue',
-}
+import { db } from '../database/config';
+import firebase from 'firebase';
 
-const items = {
-    '2019-04-26': [
-        { key: 'CSE 3320', color: eventProps.classes['CSE 3320'], text: 'Test 1', done: false, important: true },
-        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 2', done: false, important: false }
-    ],
-    '2019-04-05': [
-        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Quiz 4', done: true, important: false }
-    ],
-    '2019-04-20': [
-        { key: 'IE 3310', color: eventProps.classes['IE 3310'], text: 'Quiz 3', done: false, important: true },
-        { key: 'CSE 3310', color: eventProps.classes['CSE 3310'], text: 'Homework 3', done: true, important: false }
-    ],
-}
+const items = {}
 
 export default class HomeCalendar extends Component {
 
@@ -39,16 +20,58 @@ export default class HomeCalendar extends Component {
         headerTitle: 'Overview',
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            items: items,
-        };
+    state = {
+        items: items,
+        events: {
+            classes: {},
+            'Meetings': null,
+            'Misc Events': null,
+        },
+    }
+
+    fetchClasses = () => {
+        firebase.database().ref().child('classProps').once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const tempc = this.state.events
+                tempc.classes[childSnapshot.key] = childSnapshot.val()
+                this.setState({
+                    events: tempc,
+                })
+            })
+        })
+    }
+
+    fetchEvents = () => {
+        firebase.database().ref().child('eventProps').once('value', snapshot => {
+            const tempe = this.state.events
+            tempe['Meetings'] = snapshot.child('Meetings').val()
+            tempe['Misc Events'] = snapshot.child('Misc Events').val()
+            this.setState({
+                events: tempe,
+            })
+        })
+    }
+
+    fetchAgendaEvents = () => {
+        firebase.database().ref().child('events').once('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const tempc = this.state.items
+                tempc[childSnapshot.child('date').val()] = []
+                tempc[childSnapshot.child('date').val()].push(childSnapshot.val())
+                this.setState({
+                    items: tempc,
+                })
+            })
+        })
     }
 
     componentDidMount = () => {
+
+        this.fetchAgendaEvents()
+
         var d = new Date()
         const date = d.toISOString().split('T')[0]
+
         const temp = this.state.items
         if (!temp[date]) {
             temp[date] = []
@@ -57,12 +80,18 @@ export default class HomeCalendar extends Component {
                 items: temp,
             })
         }
+
+        this.fetchEvents()
+        this.fetchClasses()
     }
 
     render() {
+
+        let agendaEvents = JSON.parse(JSON.stringify(this.state.items))
+
         return (
             <Agenda
-                items={this.state.items}
+                items={agendaEvents}
                 selected={Date()}
 
                 renderItem={this.renderItem.bind(this)}
@@ -94,8 +123,8 @@ export default class HomeCalendar extends Component {
 
     renderItem = (item) => {
         return (
-            <View style={[ styles.item, { backgroundColor: item.important ? 'red' : 'white' }]}>
-                <Text style={{ 
+            <View style={[styles.item, { backgroundColor: item.important ? 'red' : 'white' }]}>
+                <Text style={{
                     alignSelf: 'flex-start',
                     textDecorationLine: item.done ? 'line-through' : 'none',
                     color: item.important ? 'white' : 'black'
@@ -105,7 +134,7 @@ export default class HomeCalendar extends Component {
                 <Text style={{
                     alignSelf: 'flex-end',
                     textAlign: 'right',
-                    color: item.important ? 'white' : eventProps.classes[item.key],
+                    color: item.important ? 'white' : this.state.events.classes[item.key],
                 }}>
                     {item.key}
                 </Text>
