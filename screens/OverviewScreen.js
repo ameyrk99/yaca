@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    StyleSheet
+    StyleSheet,
 } from 'react-native';
 import { Agenda } from 'react-native-calendars';
+import { ActivityIndicator } from 'react-native-paper';
 import Emoji from 'react-native-emoji';
 
 import Colors from '../constants/Colors';
@@ -26,6 +27,7 @@ export default class HomeCalendar extends Component {
             'Meetings': null,
             'Misc Events': null,
         },
+        isLoadingData: true,
     }
 
     fetchClasses = () => {
@@ -62,7 +64,7 @@ export default class HomeCalendar extends Component {
                 }
 
                 const tempData = childSnapshot.val()
-                tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events' ) ? 
+                tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events') ?
                     this.state.events[tempData.key] : this.state.events.classes[tempData.key]
                 tempc[date_now].push(tempData)
                 this.setState({
@@ -80,10 +82,17 @@ export default class HomeCalendar extends Component {
                 'Meetings': null,
                 'Misc Events': null,
             },
+            isLoadingData: true,
         })
         this.fetchEvents()
         this.fetchClasses()
         this.fetchAgendaEvents()
+
+        setTimeout(() => {
+            this.setState({
+                isLoadingData: false,
+            })
+        }, 20)
     }
 
     componentDidMount = () => {
@@ -112,36 +121,44 @@ export default class HomeCalendar extends Component {
 
         let agendaEvents = JSON.parse(JSON.stringify(this.state.items))
 
-        return (
-            <Agenda
-                items={agendaEvents}
-                selected={Date()}
+        return this.state.isLoadingData ?
+            (
+                <View style={styles.container}>
+                    <ActivityIndicator size="large" color={Colors.tintColor} />
+                </View>
+            ) : (
+                <Agenda
+                    items={agendaEvents}
+                    selected={Date()}
 
-                renderItem={this.renderItem.bind(this)}
-                renderEmptyDate={this.renderEmptyDate.bind(this)}
-                rowHasChanged={this.rowHasChanged.bind(this)}
-                renderEmptyData={this.renderEmptyData.bind(this)}
-
-                onDayPress={(day) => {
-                    const temp = this.state.items
-                    const date = day.dateString
-                    if (!temp[date]) {
-                        temp[date] = []
-
-                        this.setState({
-                            items: temp,
-                        })
+                    renderItem={this.renderItem.bind(this)
                     }
-                }}
+                    renderEmptyDate={this.renderEmptyDate.bind(this)}
+                    rowHasChanged={this.rowHasChanged.bind(this)}
+                    renderEmptyData={this.renderEmptyData.bind(this)}
 
-                theme={{
-                    agendaTodayColor: Colors.tintColor,
-                    agendaKnobColor: Colors.tintColor,
-                    selectedDayBackgroundColor: Colors.tintColor,
-                    selectedDayTextColor: '#ffffff',
-                }}
-            />
-        );
+                    onDayPress={(day) => {
+                        const temp = this.state.items
+                        const date = day.dateString
+                        if (!temp[date]) {
+                            temp[date] = []
+
+                            this.setState({
+                                items: temp,
+                            })
+                        }
+                    }
+                    }
+
+                    theme={{
+                        agendaTodayColor: Colors.tintColor,
+                        agendaKnobColor: Colors.tintColor,
+                        selectedDayBackgroundColor: Colors.tintColor,
+                        selectedDayTextColor: '#ffffff',
+                    }}
+                />
+            )
+        // }
     }
 
     renderItem = (item) => {
@@ -210,5 +227,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         flexDirection: 'column',
         alignContent: 'center'
-    }
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center'
+    },
 });
