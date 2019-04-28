@@ -27,6 +27,7 @@ export default class ColorsPage extends React.Component {
     };
 
     state = {
+        userID: 'KJJBNjo9xifFgkw3W5nG0aQh4lD3',
         events: {
             classes: {},
             'Meetings': null,
@@ -41,7 +42,7 @@ export default class ColorsPage extends React.Component {
     }
 
     fetchClasses = () => {
-        firebase.database().ref().child('classProps').once('value', (snapshot) => {
+        firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.events
                 tempc.classes[childSnapshot.key] = childSnapshot.val()
@@ -53,7 +54,7 @@ export default class ColorsPage extends React.Component {
     }
 
     fetchEvents = () => {
-        firebase.database().ref().child('eventProps').on('value', snapshot => {
+        firebase.database().ref('/users/'+this.state.userID).child('eventProps').on('value', snapshot => {
             const tempe = this.state.events
             tempe['Meetings'] = snapshot.child('Meetings').val()
             tempe['Misc Events'] = snapshot.child('Misc Events').val()
@@ -191,12 +192,12 @@ export default class ColorsPage extends React.Component {
                                             'Misc Events': this.state.events["Misc Events"]
                                         }
 
-                                        let newEventPropsKey = firebase.database().ref().child('classProps').key
-                                        let otherEventsKey = firebase.database().ref().child('eventProps').key
+                                        let newEventPropsKey = firebase.database().ref('/users/'+this.state.userID).child('classProps').key
+                                        let otherEventsKey = firebase.database().ref('/users/'+this.state.userID).child('eventProps').key
                                         var updates = {}
                                         updates['/' + newEventPropsKey] = tempC.classes
                                         updates['/' + otherEventsKey] = otherEvents
-                                        firebase.database().ref().update(updates)
+                                        firebase.database().ref('/users/'+this.state.userID).update(updates)
 
                                         this.setState({
                                             events: tempC,
@@ -228,10 +229,10 @@ export default class ColorsPage extends React.Component {
                                                 text: '',
                                             })
 
-                                            let newEventPropsKey = firebase.database().ref().child('classProps').key
+                                            let newEventPropsKey = firebase.database().ref('/users/'+this.state.userID).child('classProps').key
                                             var updates = {}
                                             updates['/' + newEventPropsKey] = tempC.classes
-                                            firebase.database().ref().update(updates)
+                                            firebase.database().ref('/users/'+this.state.userID).update(updates)
                                             this.setpaletteVis(false);
                                         }}
                                     >
