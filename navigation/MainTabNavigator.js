@@ -80,10 +80,9 @@ SettingsStack.navigationOptions = {
 export default createMaterialBottomTabNavigator({
   HomeStack,
   OverviewStack,
-  // AddEventStack,
-  // SearchStack,
   SettingsStack,
 }, {
+    shifting: true,
     barStyle: {
       backgroundColor: Colors.tintColor,
     },

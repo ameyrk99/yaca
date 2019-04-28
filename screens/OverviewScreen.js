@@ -12,7 +12,6 @@ import Colors from '../constants/Colors';
 import { db } from '../database/config';
 import firebase from 'firebase';
 
-const items = {}
 
 export default class HomeCalendar extends Component {
 
@@ -21,7 +20,7 @@ export default class HomeCalendar extends Component {
     };
 
     state = {
-        items: items,
+        items: {},
         events: {
             classes: {},
             'Meetings': null,
@@ -56,8 +55,16 @@ export default class HomeCalendar extends Component {
         firebase.database().ref().child('events').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.items
-                tempc[childSnapshot.child('date').val()] = []
-                tempc[childSnapshot.child('date').val()].push(childSnapshot.val())
+                const date_now = childSnapshot.child('date').val()
+
+                if (tempc[date_now] == undefined) {
+                    tempc[date_now] = []
+                }
+
+                const tempData = childSnapshot.val()
+                tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events' ) ? 
+                    this.state.events[tempData.key] : this.state.events.classes[tempData.key]
+                tempc[date_now].push(tempData)
                 this.setState({
                     items: tempc,
                 })
@@ -65,9 +72,25 @@ export default class HomeCalendar extends Component {
         })
     }
 
+    update = () => {
+        this.setState({
+            items: {},
+            events: {
+                classes: {},
+                'Meetings': null,
+                'Misc Events': null,
+            },
+        })
+        this.fetchEvents()
+        this.fetchClasses()
+        this.fetchAgendaEvents()
+    }
+
     componentDidMount = () => {
 
-        this.fetchAgendaEvents()
+        // this.fetchAgendaEvents()
+
+        this.update()
 
         var d = new Date()
         const date = d.toISOString().split('T')[0]
@@ -81,8 +104,8 @@ export default class HomeCalendar extends Component {
             })
         }
 
-        this.fetchEvents()
-        this.fetchClasses()
+        // this.fetchEvents()
+        // this.fetchClasses()
     }
 
     render() {
@@ -134,7 +157,7 @@ export default class HomeCalendar extends Component {
                 <Text style={{
                     alignSelf: 'flex-end',
                     textAlign: 'right',
-                    color: item.important ? 'white' : this.state.events.classes[item.key],
+                    color: item.important ? 'white' : item.color,
                 }}>
                     {item.key}
                 </Text>
