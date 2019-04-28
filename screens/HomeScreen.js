@@ -32,19 +32,19 @@ export default class HomeScreen extends React.Component {
         super(props)
         let d = new Date()
         this.state = {
-            selected: d.toISOString().split('T')[0],
             items: {},
             events: {
                 classes: {},
                 'Meetings': null,
                 'Misc Events': null,
             },
+            selected: d.toISOString().split('T')[0],
             visible: false,
             modalVisible: false,
             checked: false,
             status: 'checked',
             newEventKey: '',
-            refreshing: false,
+            eventTitle: '',
         }
         this.onDayPress = this.onDayPress.bind(this)
     }
@@ -77,8 +77,11 @@ export default class HomeScreen extends React.Component {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.items
                 const date_now = childSnapshot.child('date').val()
-                tempc[date_now] = {
-                    dots: [],
+
+                if (tempc[date_now] == undefined) {
+                    tempc[date_now] = {
+                        dots: [],
+                    }
                 }
 
                 const tempData = childSnapshot.val()
@@ -93,13 +96,21 @@ export default class HomeScreen extends React.Component {
     }
 
     update = () => {
+        this.setState({
+            items: {},
+            events: {
+                classes: {},
+                'Meetings': null,
+                'Misc Events': null,
+            },
+        })
         this.fetchEvents()
         this.fetchClasses()
         this.fetchAgendaEvents()
     }
 
     componentDidMount = () => {
-        this.update();
+        this.update()
     }
 
     _openMenu = () => this.setState({ visible: true });
@@ -152,17 +163,19 @@ export default class HomeScreen extends React.Component {
                                             <Text style={{
                                                 alignSelf: 'center',
                                                 paddingRight: 80,
-                                                color: item.important ? 'white' : this.state.events.classes[item.key]
+                                                color: item.important ? 'white' : item.color
                                             }}>
                                                 {item.key}
                                             </Text>
                                         </View>}
                                         onPress={() => {
                                             const temp = this.state.items
-                                            temp[this.state.selected].dots[i].done = !this.state.items[this.state.selected].dots[i].done
+                                            const newMark = !this.state.items[this.state.selected].dots[i].done
+                                            temp[this.state.selected].dots[i].done = newMark
                                             this.setState({
                                                 items: temp,
                                             })
+                                            firebase.database().ref().child('events').child(item.newEventKey).child('done').set(newMark)
                                         }}
                                         delayLongPress={1000}
                                         onLongPress={() => {
@@ -199,6 +212,7 @@ export default class HomeScreen extends React.Component {
                     onPress={() => {
                         this.setState({
                             newEventKey: '',
+                            eventTitle: '',
                             checked: false,
                         })
                         this.setModalVisible(true);
@@ -239,7 +253,6 @@ export default class HomeScreen extends React.Component {
                                         onPress={() => { this.setState({ checked: !this.state.checked }); }}
                                     />}
                                 style={[styles.listStyle, { margin: 5 }]}
-                                onPress={this._openMenu}
                             />
                         </List.Section>
 
