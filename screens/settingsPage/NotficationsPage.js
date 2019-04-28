@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
+    Icon
 } from 'react-native';
 import { Caption, Text, Checkbox, List } from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -12,8 +13,8 @@ import Colors from '../../constants/Colors';
 const styles = StyleSheet.create({
     listStyle: {
         borderRadius: 0,
-        borderWidth: 0.5,
-        borderColor: '#d6d7da',
+        // borderWidth: 0.5,
+        // borderColor: '#d6d7da',
     }
 });
 
@@ -24,7 +25,7 @@ export default class NotificationsPage extends React.Component {
             headerTitle: 'Notification Settings',
             headerLeft: (
                 <Ionicons style={{ paddingLeft: 22 }} onPress={navigation.getParam('goBack')}
-                    name="md-arrow-back" size={32} color={Colors.tintColor} />
+                    name="ios-arrow-back" size={32} color={Colors.tintColor} />
             ),
         }
     };
@@ -62,7 +63,7 @@ export default class NotificationsPage extends React.Component {
                     <List.Item
                         title={!this.state.switchValue ? 'Turn on reminders?' : 'Turn off reminders?'}
                         right={() => <List.Icon icon={this.state.switchValue ? 'notifications-active' : 'notifications-off'} />}
-                        style={[styles.listStyle, {paddingVertical: -25}]}
+                        style={[styles.listStyle, { paddingVertical: -25 }]}
                         onPress={() => {
                             this.setState({
                                 switchValue: !this.state.switchValue

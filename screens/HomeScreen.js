@@ -25,7 +25,7 @@ import firebase from 'firebase';
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
-        headerTitle: 'Home',
+        headerTitle: 'YACA',
     };
 
     constructor(props) {
@@ -119,7 +119,9 @@ export default class HomeScreen extends React.Component {
 
     render() {
 
-        let markedEvents = JSON.parse(JSON.stringify(this.state.items))
+        const markedEvents = JSON.parse(JSON.stringify(this.state.items))
+        const tempDisDate = new Date(this.state.selected)
+        const tempDate = tempDisDate.toUTCString().split(' 00:00:00 ')[0] 
 
         return (
             <View style={{ flex: 1 }}>
@@ -144,7 +146,7 @@ export default class HomeScreen extends React.Component {
 
                     <Divider style={{ backgroundColor: Colors.tintColor }} />
 
-                    <Title style={{ padding: 5, color: Colors.tintColor }}>{this.state.selected}</Title>
+                    <Title style={{ padding: 5, color: Colors.tintColor }}>{tempDate}</Title>
 
                     <ScrollView style={{ flex: 1, flexDirection: 'column', }}>
 
@@ -407,7 +409,7 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         borderRadius: 0,
-        borderWidth: 0.5,
+        borderWidth: 1,
         borderColor: '#d6d7da',
     }
 })
