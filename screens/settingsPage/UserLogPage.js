@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
+    ToastAndroid,
 } from 'react-native';
 import { Text, List } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,8 +32,7 @@ export default class UserLogPage extends React.Component {
 
     _signIn = async () => {
         try {
-
-            const { type, idToken, accessToken } = await Google.logInAsync({ clientId: "112924563833-peanb5ek4rlnsin0e29rqsa402gllamc.apps.googleusercontent.com" });
+            const { type, idToken, accessToken } = await Google.logInAsync({ clientId: "644929303024-9ot2ihq96nl2ee49iv95a2jgsjnkthj6.apps.googleusercontent.com" });
 
             if (type === "success") {
                 const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
@@ -53,8 +53,8 @@ export default class UserLogPage extends React.Component {
                                 ToastAndroid.show('Error logging in.', ToastAndroid.SHORT)
                                 console.log("error", error)
                             })
-
                     })
+
                     .catch((error) => {
                         ToastAndroid.show('Error opening Auth' + error, ToastAndroid.SHORT)
                         console.log("error", error)
