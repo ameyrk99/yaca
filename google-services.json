@@ -15,7 +15,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "644929303024-1tju0sl3rsqf9hte1q2i3ahihp7vqrof.apps.googleusercontent.com",
+          "client_id": "644929303024-loe0cob326kg43m441n80ieaghs33cm6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yaca.yacadev",
+            "certificate_hash": "91e85b3e6b46ed1264f231e7cf00d73ced1d4392"
+          }
+        },
+        {
+          "client_id": "644929303024-9ot2ihq96nl2ee49iv95a2jgsjnkthj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yaca.yacadev",
+            "certificate_hash": "8ba419f45c55d8043022f4a5314ea10ffc4aba9b"
+          }
+        },
+        {
+          "client_id": "644929303024-l4duh7g4dvleqiecg6fbg0d4h6l2nahm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -28,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "644929303024-1tju0sl3rsqf9hte1q2i3ahihp7vqrof.apps.googleusercontent.com",
+              "client_id": "644929303024-l4duh7g4dvleqiecg6fbg0d4h6l2nahm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
