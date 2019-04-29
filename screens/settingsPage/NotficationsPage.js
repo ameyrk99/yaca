@@ -33,6 +33,7 @@ export default class NotificationsPage extends React.Component {
     };
 
     state = {
+        userID: firebase.auth().currentUser.uid,
         switchValue: null,
         isDateTimePickerVisible: false,
         time: ''
