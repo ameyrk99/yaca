@@ -7,6 +7,7 @@ import {
 import { Caption, Text, Checkbox, List } from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Ionicons } from '@expo/vector-icons';
+import { Permissions, Notifications } from 'expo';
 
 import Colors from '../../constants/Colors';
 import { db } from '../../database/config';
@@ -37,6 +38,25 @@ export default class NotificationsPage extends React.Component {
         switchValue: null,
         isDateTimePickerVisible: false,
         time: ''
+    }
+    
+    getPushToken = async () => {
+        const { status: existingStatus } = await Permissions.getAsync(
+            Permissions.NOTIFICATIONS
+        );
+        let finalStatus = existingStatus;
+
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+
+        if (finalStatus !== 'granted') {
+            return;
+        }
+
+        let token = await Notifications.getExpoPushTokenAsync()
+        firebase.database().ref('/users/'+this.state.userID).update({pushToken: token})
     }
 
     fetchInfo = () => {
@@ -88,6 +108,9 @@ export default class NotificationsPage extends React.Component {
                                 switchValue: !this.state.switchValue
                             })
                             firebase.database().ref('/users/'+this.state.userID).update({notifications: !this.state.switchValue})
+                            if (this.state.switchValue) {
+                                this.getPushToken()
+                            }
                         }}
                     />
                     {this.state.switchValue && <List.Item
