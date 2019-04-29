@@ -9,6 +9,8 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../../constants/Colors';
+import { db } from '../../database/config';
+import firebase from 'firebase';
 
 const styles = StyleSheet.create({
     listStyle: {
@@ -31,13 +33,27 @@ export default class NotificationsPage extends React.Component {
     };
 
     state = {
-        switchValue: false,
+        switchValue: null,
         isDateTimePickerVisible: false,
-        time: '16:00'
+        time: ''
+    }
+
+    fetchInfo = () => {
+        firebase.database().ref('/users/'+this.state.userID).once('value', snapshot => {
+            let tempe = this.state.switchValue
+            let tempt = this.state.time
+            tempe = snapshot.child('notifications').val()
+            tempt = snapshot.child('time').val()
+            this.setState({
+                switchValue: tempe,
+                time: tempt,
+            })
+        })
     }
 
     componentDidMount() {
         this.props.navigation.setParams({ goBack: this._goBack });
+        this.fetchInfo()
     }
 
     _goBack = () => {
@@ -53,6 +69,8 @@ export default class NotificationsPage extends React.Component {
         this.setState({
             time: formatedTime,
         })
+        let temptime = this.state.time
+        firebase.database().ref('/users/'+this.state.userID).update({time: temptime})
         this._hideDateTimePicker();
     };
 
@@ -68,6 +86,7 @@ export default class NotificationsPage extends React.Component {
                             this.setState({
                                 switchValue: !this.state.switchValue
                             })
+                            firebase.database().ref('/users/'+this.state.userID).update({notifications: !this.state.switchValue})
                         }}
                     />
                     {this.state.switchValue && <List.Item
