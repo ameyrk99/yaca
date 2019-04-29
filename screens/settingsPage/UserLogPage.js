@@ -20,8 +20,13 @@ import { white } from 'ansi-colors';
 
 export default class UserLogPage extends React.Component {
 
-    state = {
-        userID: firebase.auth().currentUser,
+    constructor() {
+        super()
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this._goBack()
+            }
+        });
     }
 
     componentDidMount() {
@@ -46,9 +51,7 @@ export default class UserLogPage extends React.Component {
                             name: user.user.displayName,
                         })
                             .then(() => {
-                                this.setState({
-                                    userID: userID,
-                                })
+                                this._goBack()
                                 ToastAndroid.show('User logged in', ToastAndroid.SHORT)
                             })
                             .catch((error) => {
@@ -56,7 +59,6 @@ export default class UserLogPage extends React.Component {
                                 console.log("error", error)
                             })
                     })
-
                     .catch((error) => {
                         ToastAndroid.show('Error opening Auth' + error, ToastAndroid.SHORT)
                         console.log("error", error)
@@ -69,29 +71,24 @@ export default class UserLogPage extends React.Component {
 
     render() {
 
-        if (this.state.userID) {
-            this._goBack()
-            return <View></View>
-        } else {
-            return (
-                <ImageBackground source={require('./loginSplash.png')} style={{ width: '100%', height: '100%' }}>
+        return (
+            <ImageBackground source={require('./loginSplash.png')} style={{ width: '100%', height: '100%' }}>
+                <View style={{ flex: 1 }}>
+                    <TouchableOpacity
+                        style={styles.upperSec}
+                        onPress={() => WebBrowser.openBrowserAsync('https://github.com/ameyrk99/yaca')}
+                    >
+                    </TouchableOpacity>
                     <View style={{ flex: 1 }}>
-                        <TouchableOpacity
-                            style={styles.upperSec}
-                            onPress={() => WebBrowser.openBrowserAsync('https://github.com/ameyrk99/yaca')}
-                        >
-                        </TouchableOpacity>
-                        <View style={{ flex: 1 }}>
-                            <Button color={'white'} mode="contained" style={{ margin: 75, shadowOpacity: 0, height: 70, paddingTop: 15 }}
-                                onPress={this._signIn}
-                                icon='person'>
-                                GOOGLE LOGIN
+                        <Button color={'white'} mode="contained" style={{ margin: 75, shadowOpacity: 0, height: 70, paddingTop: 15 }}
+                            onPress={this._signIn}
+                            icon='person'>
+                            GOOGLE LOGIN
                     </Button>
-                        </View>
                     </View>
-                </ImageBackground>
-            )
-        }
+                </View>
+            </ImageBackground>
+        )
     }
 }
 
