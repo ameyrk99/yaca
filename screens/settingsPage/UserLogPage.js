@@ -5,9 +5,10 @@ import {
     TouchableOpacity,
     ScrollView,
     Image,
+    ImageBackground,
     ToastAndroid,
 } from 'react-native';
-import { Text, List } from 'react-native-paper';
+import { Button, Text, Title } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { WebBrowser, Google } from 'expo';
 
@@ -15,6 +16,7 @@ import { db } from '../../database/config';
 import firebase from 'firebase';
 
 import Colors from '../../constants/Colors'
+import { white } from 'ansi-colors';
 
 export default class UserLogPage extends React.Component {
 
@@ -72,30 +74,22 @@ export default class UserLogPage extends React.Component {
             return <View></View>
         } else {
             return (
-                <View style={{ flex: 1 }}>
-                    <TouchableOpacity
-                        style={styles.upperSec}
-                        onPress={() => WebBrowser.openBrowserAsync('https://github.com/ameyrk99/yaca')}
-                    >
-                        <Image
-                            source={require('./icon.png')}
-                        />
-                        <Text style={{ margin: 10, textAlign: 'center' }}>
-                            Yet Another Calendar App
-                    </Text>
-                    </TouchableOpacity>
-                    <List.Section style={{ flex: 1 }}>
-                        <List.Item
-                            title='Sign-in with Google'
-                            left={() =>
-                                <Ionicons style={{ paddingLeft: 22 }}
-                                    name="logo-google" size={35} color={Colors.tintColor} />
-                            }
-                            style={styles.listStyle}
-                            onPress={this._signIn}
-                        />
-                    </List.Section>
-                </View>
+                <ImageBackground source={require('./loginSplash.png')} style={{ width: '100%', height: '100%' }}>
+                    <View style={{ flex: 1 }}>
+                        <TouchableOpacity
+                            style={styles.upperSec}
+                            onPress={() => WebBrowser.openBrowserAsync('https://github.com/ameyrk99/yaca')}
+                        >
+                        </TouchableOpacity>
+                        <View style={{ flex: 1 }}>
+                            <Button color={'white'} mode="contained" style={{ margin: 75, shadowOpacity: 0, height: 70, paddingTop: 15 }}
+                                onPress={this._signIn}
+                                icon='person'>
+                                GOOGLE LOGIN
+                    </Button>
+                        </View>
+                    </View>
+                </ImageBackground>
             )
         }
     }
@@ -103,7 +97,7 @@ export default class UserLogPage extends React.Component {
 
 const styles = StyleSheet.create({
     upperSec: {
-        flex: 1,
+        flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -113,5 +107,5 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         borderWidth: 1,
         borderColor: '#d6d7da',
-    }
+    },
 })
