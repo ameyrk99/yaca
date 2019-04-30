@@ -78,7 +78,7 @@ export default createAppContainer(createSwitchNavigator(
         // AddActualEvent: AddActualEventStack,
         // AddClass: AddClassStack,
     },
-    // {
-    //     initialRouteName: 'LogOn',
-    // }
+    {
+        initialRouteName: 'LogOn',
+    }
 ));
