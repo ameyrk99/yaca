@@ -32,8 +32,7 @@ export default class HomeScreen extends React.Component {
         super(props)
         let d = new Date()
         this.state = {
-            // userID: firebase.auth().currentUser.uid,
-            userID: 'k6PfxucHILWpPU7Z3h9LF4duLXE2',
+            userID: firebase.auth().currentUser.uid,
             items: {},
             events: {
                 classes: {},

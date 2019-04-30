@@ -7,6 +7,8 @@ import {
 import { TextInput, FAB } from 'react-native-paper';
 
 import Colors from '../constants/Colors'
+import { db } from '../database/config';
+import firebase from 'firebase';
 
 const styles = StyleSheet.create({
     fab: {
@@ -24,7 +26,22 @@ export default class NotepadScreen extends React.Component {
     };
 
     state = {
+        userID: firebase.auth().currentUser.uid,
         text: ''
+    }
+
+    fetchNotes = () => {
+        firebase.database().ref('/users/'+this.state.userID).once('value', snapshot => {
+            let tempn = this.state.text
+            tempn = snapshot.child('notes').val()
+            this.setState({
+                text: tempn,
+            })
+        })
+    }
+
+    componentDidMount() {
+        this.fetchNotes()
     }
 
     render() {
@@ -54,6 +71,7 @@ export default class NotepadScreen extends React.Component {
                     icon="save"
                     onPress={() => {
                         ToastAndroid.show('Note Saved', ToastAndroid.SHORT)
+                        firebase.database().ref('/users/'+this.state.userID).update({notes: this.state.text})
                     }}
                 />
             </View>

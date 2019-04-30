@@ -45,8 +45,7 @@ export default class HomeScreen extends React.Component {
     constructor() {
         super();
         this.state = {
-            // email: firebase.auth().currentUser.email,
-            email: 'user.name@gmail.com'
+            email: firebase.auth().currentUser.email,
         }
     }
 
