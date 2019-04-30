@@ -21,7 +21,8 @@ export default class HomeCalendar extends Component {
     };
 
     state = {
-        userID: firebase.auth().currentUser.uid,
+        // userID: firebase.auth().currentUser.uid,
+        userID: 'k6PfxucHILWpPU7Z3h9LF4duLXE2',
         items: {},
         events: {
             classes: {},

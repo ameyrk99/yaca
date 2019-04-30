@@ -32,7 +32,8 @@ export default class HomeScreen extends React.Component {
         super(props)
         let d = new Date()
         this.state = {
-            userID: firebase.auth().currentUser.uid,
+            // userID: firebase.auth().currentUser.uid,
+            userID: 'k6PfxucHILWpPU7Z3h9LF4duLXE2',
             items: {},
             events: {
                 classes: {},
@@ -52,8 +53,8 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchClasses = () => {
-        
-        firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
+
+        firebase.database().ref('/users/' + this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.events
                 tempc.classes[childSnapshot.key] = childSnapshot.val()
@@ -65,7 +66,7 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchEvents = () => {
-        firebase.database().ref('/users/'+this.state.userID).child('eventProps').once('value', snapshot => {
+        firebase.database().ref('/users/' + this.state.userID).child('eventProps').once('value', snapshot => {
             const tempe = this.state.events
             tempe['Meetings'] = snapshot.child('Meetings').val()
             tempe['Misc Events'] = snapshot.child('Misc Events').val()
@@ -76,7 +77,7 @@ export default class HomeScreen extends React.Component {
     }
 
     fetchAgendaEvents = () => {
-        firebase.database().ref('/users/'+this.state.userID).child('events').once('value', (snapshot) => {
+        firebase.database().ref('/users/' + this.state.userID).child('events').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.items
                 const date_now = childSnapshot.child('date').val()
@@ -88,7 +89,7 @@ export default class HomeScreen extends React.Component {
                 }
 
                 const tempData = childSnapshot.val()
-                tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events' ) ? 
+                tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events') ?
                     this.state.events[tempData.key] : this.state.events.classes[tempData.key]
                 tempc[date_now].dots.push(tempData)
                 this.setState({
@@ -130,7 +131,7 @@ export default class HomeScreen extends React.Component {
 
         const markedEvents = JSON.parse(JSON.stringify(this.state.items))
         const tempDisDate = new Date(this.state.selected)
-        const tempDate = tempDisDate.toUTCString().split(' 00:00:00 ')[0] 
+        const tempDate = tempDisDate.toUTCString().split(' 00:00:00 ')[0]
 
         return this.state.isLoadingData ?
             (
@@ -138,251 +139,251 @@ export default class HomeScreen extends React.Component {
                     <ActivityIndicator size="large" color={Colors.tintColor} />
                 </View>
             ) : (
-            <View style={{ flex: 1 }}>
-
                 <View style={{ flex: 1 }}>
-                    <CalendarList
-                        onDayPress={this.onDayPress}
-                        style={styles.calendar}
-                        hideExtraDays
-                        horizontal
-                        pagingEnabled
-                        markingType={'multi-dot'}
-                        markedDates={markedEvents}
 
-                        theme={{
-                            selectedDayBackgroundColor: Colors.tintColor,
-                            selectedDayTextColor: '#ffffff',
-                            monthTextColor: Colors.tintColor,
-                            textMonthFontWeight: 'bold',
+                    <View style={{ flex: 1 }}>
+                        <CalendarList
+                            onDayPress={this.onDayPress}
+                            style={styles.calendar}
+                            hideExtraDays
+                            horizontal
+                            pagingEnabled
+                            markingType={'multi-dot'}
+                            markedDates={markedEvents}
+
+                            theme={{
+                                selectedDayBackgroundColor: Colors.tintColor,
+                                selectedDayTextColor: '#ffffff',
+                                monthTextColor: Colors.tintColor,
+                                textMonthFontWeight: 'bold',
+                            }}
+                        />
+
+                        <Divider style={{ backgroundColor: Colors.tintColor }} />
+
+                        <Title style={{ padding: 5, color: Colors.tintColor }}>{tempDate}</Title>
+
+                        <ScrollView style={{ flex: 1, flexDirection: 'column', }}>
+
+                            <List.Section>
+                                {
+                                    this.state.items[this.state.selected] ? (this.state.items[this.state.selected].dots.map((item, i) =>
+                                        <List.Item
+                                            key={i}
+                                            title={<Text style={{
+                                                textDecorationLine: item.done ? 'line-through' : 'none',
+                                                color: item.important ? 'white' : 'black',
+                                            }}>
+                                                {item.text} {item.done && <Text style={{ fontStyle: 'italic', color: item.important ? 'white' : 'gray' }}>(complete)</Text>}
+                                            </Text>}
+                                            right={() => <View style={{ alignSelf: 'center' }}>
+                                                <Text style={{
+                                                    alignSelf: 'center',
+                                                    paddingRight: 80,
+                                                    color: item.important ? 'white' : item.color
+                                                }}>
+                                                    {item.key}
+                                                </Text>
+                                            </View>}
+                                            onPress={() => {
+                                                const temp = this.state.items
+                                                const newMark = !this.state.items[this.state.selected].dots[i].done
+                                                temp[this.state.selected].dots[i].done = newMark
+                                                this.setState({
+                                                    items: temp,
+                                                })
+                                                firebase.database().ref('/users/' + this.state.userID).child('events').child(item.newEventKey).child('done').set(newMark)
+                                            }}
+                                            delayLongPress={1000}
+                                            onLongPress={() => {
+                                                firebase.database().ref('/users/' + this.state.userID).child('events').child(item.newEventKey).remove()
+                                                const temp = this.state.items
+                                                delete temp[this.state.selected].dots[i]
+                                                this.setState({
+                                                    items: temp,
+                                                    refreshing: true,
+                                                })
+
+                                                this.update();
+                                            }}
+                                            style={[
+                                                styles.emptyEvent,
+                                                { backgroundColor: item.important ? 'red' : 'white' }
+                                            ]}
+                                        />)
+                                    ) : (
+                                            <List.Item
+                                                left={() => <Text>Nothing here! <Emoji name={'grinning'} /></Text>}
+                                                style={styles.emptyEvent}
+                                            />
+                                        )
+                                }
+                            </List.Section>
+                        </ScrollView>
+                    </View>
+
+                    <FAB
+                        style={styles.fab}
+                        color={Colors.noticeText}
+                        icon="add"
+                        onPress={() => {
+                            this.setState({
+                                newEventKey: '',
+                                eventTitle: '',
+                                checked: false,
+                            })
+                            this.setModalVisible(true);
                         }}
                     />
 
-                    <Divider style={{ backgroundColor: Colors.tintColor }} />
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.modalVisible}
+                        onRequestClose={() => {
+                            this.setModalVisible(!this.state.modalVisible);
+                        }}>
+                        <View style={{ marginTop: 22, flex: 1, flexDirection: 'column', alignContent: 'center', padding: 10 }}>
+                            <Title>Add Event for {this.state.selected}</Title>
 
-                    <Title style={{ padding: 5, color: Colors.tintColor }}>{tempDate}</Title>
-
-                    <ScrollView style={{ flex: 1, flexDirection: 'column', }}>
-
-                        <List.Section>
-                            {
-                                this.state.items[this.state.selected] ? (this.state.items[this.state.selected].dots.map((item, i) =>
-                                    <List.Item
-                                        key={i}
-                                        title={<Text style={{
-                                            textDecorationLine: item.done ? 'line-through' : 'none',
-                                            color: item.important ? 'white' : 'black',
-                                        }}>
-                                            {item.text} {item.done && <Text style={{ fontStyle: 'italic', color: item.important ? 'white' : 'gray' }}>(complete)</Text>}
-                                        </Text>}
-                                        right={() => <View style={{ alignSelf: 'center' }}>
-                                            <Text style={{
-                                                alignSelf: 'center',
-                                                paddingRight: 80,
-                                                color: item.important ? 'white' : item.color
-                                            }}>
-                                                {item.key}
-                                            </Text>
-                                        </View>}
-                                        onPress={() => {
-                                            const temp = this.state.items
-                                            const newMark = !this.state.items[this.state.selected].dots[i].done
-                                            temp[this.state.selected].dots[i].done = newMark
-                                            this.setState({
-                                                items: temp,
-                                            })
-                                            firebase.database().ref('/users/'+this.state.userID).child('events').child(item.newEventKey).child('done').set(newMark)
-                                        }}
-                                        delayLongPress={1000}
-                                        onLongPress={() => {
-                                            firebase.database().ref('/users/'+this.state.userID).child('events').child(item.newEventKey).remove()
-                                            const temp = this.state.items
-                                            delete temp[this.state.selected].dots[i]
-                                            this.setState({
-                                                items: temp,
-                                                refreshing: true,
-                                            })
-
-                                            this.update();
-                                        }}
-                                        style={[
-                                            styles.emptyEvent,
-                                            { backgroundColor: item.important ? 'red' : 'white' }
-                                        ]}
-                                    />)
-                                ) : (
-                                        <List.Item
-                                            left={() => <Text>Nothing here! <Emoji name={'grinning'} /></Text>}
-                                            style={styles.emptyEvent}
-                                        />
-                                    )
-                            }
-                        </List.Section>
-                    </ScrollView>
-                </View>
-
-                <FAB
-                    style={styles.fab}
-                    color={Colors.noticeText}
-                    icon="add"
-                    onPress={() => {
-                        this.setState({
-                            newEventKey: '',
-                            eventTitle: '',
-                            checked: false,
-                        })
-                        this.setModalVisible(true);
-                    }}
-                />
-
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        this.setModalVisible(!this.state.modalVisible);
-                    }}>
-                    <View style={{ marginTop: 22, flex: 1, flexDirection: 'column', alignContent: 'center', padding: 10 }}>
-                        <Title>Add Event for {this.state.selected}</Title>
-
-                        <TextInput
-                            mode='outlined'
-                            label='Add a title'
-                            style={{ height: 60, margin: 5 }}
-                            theme={{
-                                colors: {
-                                    primary: Colors.tintColor,
-                                }
-                            }}
-                            underlineColor={Colors.tintColor}
-                            value={this.state.eventTitle}
-                            multiline={false}
-                            onChangeText={eventTitle => this.setState({ eventTitle })}
-                        />
-
-                        <List.Section>
-                            <List.Item
-                                title='Is this event important?'
-                                right={() =>
-                                    <Checkbox
-                                        status={this.state.checked ? 'checked' : 'unchecked'}
-                                        onPress={() => { this.setState({ checked: !this.state.checked }); }}
-                                    />}
-                                style={[styles.listStyle, { margin: 5 }]}
+                            <TextInput
+                                mode='outlined'
+                                label='Add a title'
+                                style={{ height: 60, margin: 5 }}
+                                theme={{
+                                    colors: {
+                                        primary: Colors.tintColor,
+                                    }
+                                }}
+                                underlineColor={Colors.tintColor}
+                                value={this.state.eventTitle}
+                                multiline={false}
+                                onChangeText={eventTitle => this.setState({ eventTitle })}
                             />
-                        </List.Section>
 
-                        <Provider>
-                            <Menu
-                                visible={this.state.visible}
-                                onDismiss={this._closeMenu}
-                                anchor={
-                                    <List.Section>
-                                        <List.Item
-                                            title={this.state.newEventKey == '' ? 'Pick event type' : this.state.newEventKey}
-                                            left={() => <List.Icon icon='event-note' color={
-                                                this.state.newEventKey == '' ?
-                                                    'black' :
-                                                    this.state.newEventKey == 'Meetings' ?
-                                                        this.state.events['Meetings'] :
-                                                        this.state.newEventKey == 'Misc Events' ? this.state.events['Misc Events'] :
-                                                        this.state.events.classes[this.state.newEventKey]
-                                            } />}
-                                            style={[styles.listStyle, { margin: 5, paddingVertical: -20 }]}
-                                            onPress={this._openMenu}
-                                        />
-                                    </List.Section>
-                                }
-                            >
-                                {
-                                    Object.keys(this.state.events.classes).reverse().map((c, i) => {
-                                        return (
-                                            <Menu.Item
-                                                key={i}
-                                                title={c}
-                                                onPress={() => {
-                                                    this.setState({
-                                                        newEventKey: c,
-                                                        visible: false,
-                                                    })
-                                                }}
-                                                icon='class'
-                                                style={{
-                                                    textDecorationColor: this.state.events.classes[c],
-                                                }}
+                            <List.Section>
+                                <List.Item
+                                    title='Is this event important?'
+                                    right={() =>
+                                        <Checkbox
+                                            status={this.state.checked ? 'checked' : 'unchecked'}
+                                            onPress={() => { this.setState({ checked: !this.state.checked }); }}
+                                        />}
+                                    style={[styles.listStyle, { margin: 5 }]}
+                                />
+                            </List.Section>
+
+                            <Provider>
+                                <Menu
+                                    visible={this.state.visible}
+                                    onDismiss={this._closeMenu}
+                                    anchor={
+                                        <List.Section>
+                                            <List.Item
+                                                title={this.state.newEventKey == '' ? 'Pick event type' : this.state.newEventKey}
+                                                left={() => <List.Icon icon='event-note' color={
+                                                    this.state.newEventKey == '' ?
+                                                        'black' :
+                                                        this.state.newEventKey == 'Meetings' ?
+                                                            this.state.events['Meetings'] :
+                                                            this.state.newEventKey == 'Misc Events' ? this.state.events['Misc Events'] :
+                                                                this.state.events.classes[this.state.newEventKey]
+                                                } />}
+                                                style={[styles.listStyle, { margin: 5, paddingVertical: -20 }]}
+                                                onPress={this._openMenu}
                                             />
-                                        )
-                                    })
-                                }
-
-                                <Divider />
-
-                                <Menu.Item
-                                    title='Meetings'
-                                    onPress={() => {
-                                        this.setState({
-                                            newEventKey: 'Meetings',
-                                            visible: false,
+                                        </List.Section>
+                                    }
+                                >
+                                    {
+                                        Object.keys(this.state.events.classes).reverse().map((c, i) => {
+                                            return (
+                                                <Menu.Item
+                                                    key={i}
+                                                    title={c}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            newEventKey: c,
+                                                            visible: false,
+                                                        })
+                                                    }}
+                                                    icon='class'
+                                                    style={{
+                                                        textDecorationColor: this.state.events.classes[c],
+                                                    }}
+                                                />
+                                            )
                                         })
-                                    }}
-                                    icon='event'
-                                />
-                                <Menu.Item
-                                    title='Misc Events'
-                                    onPress={() => {
-                                        this.setState({
-                                            newEventKey: 'Misc Events',
-                                            visible: false,
-                                        })
-                                    }}
-                                    icon='bookmark'
-                                />
-                            </Menu>
-                        </Provider>
-
-                        <View style={{ flexDirection: 'row', paddingTop: 10, alignContent: 'space-around' }}>
-                            <Button
-                                icon='arrow-back'
-                                mode="contained"
-                                color='black'
-                                style={{ margin: 10 }}
-                                onPress={() => {
-                                    this.setModalVisible(!this.state.modalVisible);
-                                }}>
-                                BACK
-                        </Button>
-                            <Button
-                                icon='add'
-                                mode="contained"
-                                color={Colors.tintColor}
-                                style={{ margin: 10 }}
-                                onPress={() => {
-
-                                    const temp = {
-                                        newEventKey: firebase.database().ref('/users/'+this.state.userID).child('events').push().key,
-                                        date: this.state.selected,
-                                        key: this.state.newEventKey,
-                                        text: this.state.eventTitle,
-                                        done: false,
-                                        important: this.state.checked,
                                     }
 
-                                    var updates = {}
-                                    updates['/events/' + temp.newEventKey] = temp
-                                    firebase.database().ref('/users/'+this.state.userID).update(updates)
+                                    <Divider />
 
-                                    this.setModalVisible(!this.state.modalVisible);
-                                    ToastAndroid.show('Event Added', ToastAndroid.SHORT)
+                                    <Menu.Item
+                                        title='Meetings'
+                                        onPress={() => {
+                                            this.setState({
+                                                newEventKey: 'Meetings',
+                                                visible: false,
+                                            })
+                                        }}
+                                        icon='event'
+                                    />
+                                    <Menu.Item
+                                        title='Misc Events'
+                                        onPress={() => {
+                                            this.setState({
+                                                newEventKey: 'Misc Events',
+                                                visible: false,
+                                            })
+                                        }}
+                                        icon='bookmark'
+                                    />
+                                </Menu>
+                            </Provider>
 
-                                    this.update();
-                                }}>
-                                ADD
+                            <View style={{ flexDirection: 'row', paddingTop: 10, alignContent: 'space-around' }}>
+                                <Button
+                                    icon='arrow-back'
+                                    mode="contained"
+                                    color='black'
+                                    style={{ margin: 10 }}
+                                    onPress={() => {
+                                        this.setModalVisible(!this.state.modalVisible);
+                                    }}>
+                                    BACK
+                        </Button>
+                                <Button
+                                    icon='add'
+                                    mode="contained"
+                                    color={Colors.tintColor}
+                                    style={{ margin: 10 }}
+                                    onPress={() => {
+
+                                        const temp = {
+                                            newEventKey: firebase.database().ref('/users/' + this.state.userID).child('events').push().key,
+                                            date: this.state.selected,
+                                            key: this.state.newEventKey,
+                                            text: this.state.eventTitle,
+                                            done: false,
+                                            important: this.state.checked,
+                                        }
+
+                                        var updates = {}
+                                        updates['/events/' + temp.newEventKey] = temp
+                                        firebase.database().ref('/users/' + this.state.userID).update(updates)
+
+                                        this.setModalVisible(!this.state.modalVisible);
+                                        ToastAndroid.show('Event Added', ToastAndroid.SHORT)
+
+                                        this.update();
+                                    }}>
+                                    ADD
                             </Button>
+                            </View>
                         </View>
-                    </View>
-                </Modal>
-            </View >
-        )
+                    </Modal>
+                </View >
+            )
     }
 
     setModalVisible(visible) {

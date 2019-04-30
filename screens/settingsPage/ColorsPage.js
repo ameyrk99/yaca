@@ -27,7 +27,8 @@ export default class ColorsPage extends React.Component {
     };
 
     state = {
-        userID: firebase.auth().currentUser.uid,
+        // userID: firebase.auth().currentUser.uid,
+        userID: 'k6PfxucHILWpPU7Z3h9LF4duLXE2',
         events: {
             classes: {},
             'Meetings': null,

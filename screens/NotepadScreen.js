@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     }
 })
 
-export default class HomeScreen extends React.Component {
+export default class NotepadScreen extends React.Component {
     static navigationOptions = {
         header: null,
     };
@@ -26,7 +26,7 @@ export default class HomeScreen extends React.Component {
     render() {
         return (
             <View style={styles.tempView}>
-                <Text style={styles.tempText}>Search</Text>
+                <Text style={styles.tempText}>Notepad goes here</Text>
             </View>
         )
     }
