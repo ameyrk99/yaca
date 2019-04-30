@@ -1,32 +1,61 @@
 import React from 'react';
 import {
     StyleSheet,
-    Text,
+    ToastAndroid,
     View,
 } from 'react-native';
+import { TextInput, FAB } from 'react-native-paper';
+
+import Colors from '../constants/Colors'
 
 const styles = StyleSheet.create({
-    tempView: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
+    fab: {
+        backgroundColor: Colors.tintColor,
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0,
     },
-    tempText: {
-        fontWeight: 'bold',
-        fontSize: 30
-    }
 })
 
 export default class NotepadScreen extends React.Component {
     static navigationOptions = {
-        header: null,
+        headerTitle: 'Notepad',
     };
+
+    state = {
+        text: ''
+    }
 
     render() {
         return (
-            <View style={styles.tempView}>
-                <Text style={styles.tempText}>Notepad goes here</Text>
+            <View style={{ flex: 1 }}>
+                <TextInput
+                    style={{ height: 420, margin: 30 }}
+                    theme={{
+                        colors: {
+                            primary: Colors.tintColor,
+                        }
+                    }}
+                    label='Take notes here'
+                    value={this.state.text}
+                    onChangeText={text => this.setState({ text })}
+                    editable={true}
+                    returnKeyType='none'
+                    mode='outlined'
+                    maxLength={1000}
+                    multiline={true}
+                    numberOfLines={10}
+                />
+
+                <FAB
+                    style={styles.fab}
+                    color={Colors.noticeText}
+                    icon="save"
+                    onPress={() => {
+                        ToastAndroid.show('Note Saved', ToastAndroid.SHORT)
+                    }}
+                />
             </View>
         )
     }
