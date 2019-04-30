@@ -11,6 +11,7 @@ import OverviewScreen from '../screens/OverviewScreen';
 // import SearchScreen from '../screens/SearchScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Colors from '../constants/Colors';
+import NotepadScreen from '../screens/NotepadScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -51,18 +52,18 @@ OverviewStack.navigationOptions = {
 //   ),
 // };
 
-// const SearchStack = createStackNavigator({
-//   Search: SearchScreen,
-// });
+const NoteStack = createStackNavigator({
+  Note: NotepadScreen,
+});
 
-// SearchStack.navigationOptions = {
-//   tabBarLabel: 'Search',
-//   tabBarIcon: (
-//     <TabBarIcon
-//       name='md-search'
-//     />
-//   ),
-// };
+NoteStack.navigationOptions = {
+  tabBarLabel: 'Notepad',
+  tabBarIcon: ({ tintColor }) =>
+    <TabBarIcon
+      color={tintColor}
+      name='md-create'
+    />
+};
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -80,6 +81,7 @@ SettingsStack.navigationOptions = {
 export default createMaterialBottomTabNavigator({
   HomeStack,
   OverviewStack,
+  NoteStack,
   SettingsStack,
 }, {
     resetOnBlur: true,
