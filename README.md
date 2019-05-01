@@ -1,4 +1,8 @@
-# YACA - Yet Another Calendar App
+# Yet Another Calendar App
+
+<p align="center">
+  <img width="40%" height="40%" src="assets/images/logo_large.png">
+</p>
 
 Install all packages:
 ```
