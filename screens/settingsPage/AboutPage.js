@@ -23,7 +23,6 @@ const libs = {
     'react-native-calendars': 'https://github.com/wix/react-native-calendars',
     'react-native-color-palette': 'https://www.npmjs.com/package/react-native-color-palette',
     'react-native-emoji': 'https://github.com/EricPKerr/react-native-emoji',
-    'react-native-modal-datetime-picker': 'https://github.com/mmazzarolo/react-native-modal-datetime-picker',
     'react-native-vector-icons': 'https://github.com/oblador/react-native-vector-icons',
 }
 

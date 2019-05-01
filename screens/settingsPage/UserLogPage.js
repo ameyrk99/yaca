@@ -3,20 +3,14 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    ScrollView,
-    Image,
     ImageBackground,
     ToastAndroid,
 } from 'react-native';
-import { Button, Text, Title } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
-import { WebBrowser, Google } from 'expo';
+import { Button } from 'react-native-paper';
+import { Permissions, Notifications, WebBrowser, Google } from 'expo';
 
 import { db } from '../../database/config';
 import firebase from 'firebase';
-
-import Colors from '../../constants/Colors'
-import { white } from 'ansi-colors';
 
 export default class UserLogPage extends React.Component {
 
@@ -27,6 +21,25 @@ export default class UserLogPage extends React.Component {
                 this._goBack()
             }
         });
+    }
+
+    _getPushToken = async (userID) => {
+        const { status: existingStatus } = await Permissions.getAsync(
+            Permissions.NOTIFICATIONS
+        );
+        let finalStatus = existingStatus;
+
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+
+        if (finalStatus !== 'granted') {
+            return;
+        }
+
+        let token = await Notifications.getExpoPushTokenAsync()
+        firebase.database().ref('/users/' + userID).update({ pushToken: token })
     }
 
     componentDidMount() {
@@ -52,6 +65,7 @@ export default class UserLogPage extends React.Component {
                         })
                             .then(() => {
                                 this._goBack()
+                                this._getPushToken(userID)
                                 ToastAndroid.show('User logged in', ToastAndroid.SHORT)
                             })
                             .catch((error) => {
