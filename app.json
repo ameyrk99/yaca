@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "YACA",
+    "description": "Yet Another Calendar App is a minimalistic planning app aimed at college students.",
     "slug": "yaca",
     "privacy": "public",
     "sdkVersion": "32.0.0",
@@ -8,13 +9,18 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "0.19.04.30",
     "orientation": "portrait",
+    "primaryColor": "#1C73B4",
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
+    },
+    "notification": {
+      "icon": "./assets/images/notification_icon.png",
+      "color": "#1C73B4"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
