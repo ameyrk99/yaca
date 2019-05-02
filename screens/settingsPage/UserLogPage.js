@@ -52,6 +52,7 @@ export default class UserLogPage extends React.Component {
 
     _signIn = async () => {
         try {
+            // Second one in the google-services.json file
             const { type, idToken, accessToken } = await Google.logInAsync({ clientId: "<**Client ID**>" });
 
             if (type === "success") {
