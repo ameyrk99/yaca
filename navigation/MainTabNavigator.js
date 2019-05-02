@@ -1,5 +1,4 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
@@ -7,8 +6,6 @@ import TabBarIcon from '../components/TabBarIcon';
 
 import HomeScreen from '../screens/HomeScreen';
 import OverviewScreen from '../screens/OverviewScreen';
-// import AddEventScreen from '../screens/AddEventScreen';
-// import SearchScreen from '../screens/SearchScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Colors from '../constants/Colors';
 import NotepadScreen from '../screens/NotepadScreen';
@@ -38,19 +35,6 @@ OverviewStack.navigationOptions = {
       name='md-calendar'
     />
 };
-
-// const AddEventStack = createStackNavigator({
-//   AddEvent: AddEventScreen,
-// });
-
-// AddEventStack.navigationOptions = {
-//   tabBarLabel: 'Add Event',
-//   tabBarIcon: (
-//     <TabBarIcon
-//       name='md-add'
-//     />
-//   ),
-// };
 
 const NoteStack = createStackNavigator({
   Note: NotepadScreen,

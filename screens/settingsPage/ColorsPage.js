@@ -335,8 +335,5 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         paddingVertical: -20,
-        // borderRadius: 0,
-        // borderWidth: 0.5,
-        // borderColor: '#d6d7da',
     }
 });

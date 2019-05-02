@@ -1,0 +1,22 @@
+/* Images */
+.imageStyle {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+}
+
+/* List */
+ul#social li {
+    display: inline;
+    padding: 2%;
+}
+
+/* Misc. */
+div.root{
+    display: none;
+}
