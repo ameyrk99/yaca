@@ -1,2 +1,4 @@
 node_modules/
 .expo/
+database/
+google-services.json

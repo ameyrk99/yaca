@@ -4,16 +4,14 @@
   <img width="40%" height="40%" src="assets/images/logo_large.png">
 </p>
 
-Install all packages:
-```
-npm install
-# or
-yarn install
-```
+YACA is a calendar app aimed towards college students.
 
-Start project:
-```
-yarn start
-```
+It is very minimal and to the point of improving prodcutivity and helping manage time.
 
-Make sure you have Android Pie SDK with API 28. React needs that.
+Visit [yaca website](https://ameyrk.me/yaca/) for info :)
+
+## Screenshots
+<p align="center">
+  <img width="40%" height="40%" src="docs/images/screenshots/screenshot_0.png">
+  <img width="40%" height="40%" src="docs/images/screenshots/screenshot_1.png">
+</p>
