@@ -90,7 +90,7 @@ export default class UserLogPage extends React.Component {
                 <View style={{ flex: 1 }}>
                     <TouchableOpacity
                         style={styles.upperSec}
-                        onPress={() => WebBrowser.openBrowserAsync('https://github.com/ameyrk99/yaca')}
+                        onPress={() => WebBrowser.openBrowserAsync('http://ameyrk.me/yaca/')}
                     >
                     </TouchableOpacity>
                     <View style={{ flex: 1 }}>

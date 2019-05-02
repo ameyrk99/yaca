@@ -12,14 +12,6 @@ import { CalendarList } from 'react-native-calendars';
 
 import Colors from '../constants/Colors';
 
-// Don't delete db even though you never use it!!!!
-// Firebase throws an error for some reason
-// Dustin: importing db takes care of this block of code:
-/*
-    firebase.initializeApp(config); // Gets the data needed for correct database.
-    var db = firebase.firestore(); // Invokes firebase before app is initialized.
-*/
-
 import { db } from '../database/config';
 import firebase from 'firebase';
 

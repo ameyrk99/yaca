@@ -95,7 +95,7 @@ export default class HomeScreen extends React.Component {
                 </List.Section>
                 <View style={styles.tempView} >
                     <Title>YACA</Title>
-                    <Caption>alpha 0.19.04.30</Caption>
+                    <Caption>alpha 0.19.05.02</Caption>
                 </View>
             </View>
         );

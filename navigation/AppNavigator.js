@@ -8,7 +8,6 @@ import NotificationsPage from '../screens/settingsPage/NotficationsPage';
 import ColorsPage from '../screens/settingsPage/ColorsPage'
 import UserLogPage from '../screens/settingsPage/UserLogPage'
 
-// Settings Stacks
 const AboutStack = createStackNavigator({
     About: { screen: AboutPage }
 });
@@ -31,7 +30,6 @@ const UserLogStack = createStackNavigator(
         }
     }
 );
-
 
 export default createAppContainer(createSwitchNavigator(
     {

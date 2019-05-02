@@ -97,9 +97,6 @@ export default class HomeCalendar extends Component {
     }
 
     componentDidMount = () => {
-
-        // this.fetchAgendaEvents()
-
         this.update()
 
         var d = new Date()
@@ -113,9 +110,6 @@ export default class HomeCalendar extends Component {
                 items: temp,
             })
         }
-
-        // this.fetchEvents()
-        // this.fetchClasses()
     }
 
     render() {

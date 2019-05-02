@@ -51,7 +51,7 @@ export default class AboutPage extends React.Component {
             <View style={{ flex: 1 }}>
                 <TouchableOpacity
                     style={styles.upperSec}
-                    onPress={() => WebBrowser.openBrowserAsync('https://github.com/ameyrk99/yaca')}
+                    onPress={() => WebBrowser.openBrowserAsync('http://ameyrk.me/yaca/')}
                 >
                     <Image
                         source={require('./icon.png')}
@@ -93,8 +93,5 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         paddingVertical: -20,
-        // borderRadius: 0,
-        // borderWidth: 0.5,
-        // borderColor: '#d6d7da',
     }
 })
