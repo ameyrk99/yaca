@@ -43,10 +43,12 @@ export default class HomeScreen extends React.Component {
         this.onDayPress = this.onDayPress.bind(this)
     }
 
+    /* Get the classes and their color properties for the user */
     fetchClasses = () => {
-
         firebase.database().ref('/users/' + this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
+                /* Because of react, we can't can't just change the events in state, thus create a copy and replace
+                 * in state */
                 const tempc = this.state.events
                 tempc.classes[childSnapshot.key] = childSnapshot.val()
                 this.setState({
@@ -56,8 +58,11 @@ export default class HomeScreen extends React.Component {
         })
     }
 
+    /* Get the events and their color properties for the user */
     fetchEvents = () => {
         firebase.database().ref('/users/' + this.state.userID).child('eventProps').once('value', snapshot => {
+            /* Because of react, we can't can't just change the events in state, thus create a copy and replace
+             * in state */
             const tempe = this.state.events
             tempe['Meetings'] = snapshot.child('Meetings').val()
             tempe['Misc Events'] = snapshot.child('Misc Events').val()
@@ -67,12 +72,14 @@ export default class HomeScreen extends React.Component {
         })
     }
 
+    /* Fetch all the events for that user */
     fetchAgendaEvents = () => {
         firebase.database().ref('/users/' + this.state.userID).child('events').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const tempc = this.state.items
                 const date_now = childSnapshot.child('date').val()
 
+                /* If there is a new date, create a empty dots array for that date key */
                 if (tempc[date_now] == undefined) {
                     tempc[date_now] = {
                         dots: [],
@@ -82,6 +89,7 @@ export default class HomeScreen extends React.Component {
                 const tempData = childSnapshot.val()
                 tempData['color'] = (tempData.key === 'Meetings' || tempData.key == 'Misc Events') ?
                     this.state.events[tempData.key] : this.state.events.classes[tempData.key]
+                /* Push new events in the dot array that was created */
                 tempc[date_now].dots.push(tempData)
                 this.setState({
                     items: tempc,
@@ -89,6 +97,8 @@ export default class HomeScreen extends React.Component {
             })
         })
     }
+
+    /* Reset all values and fetch everything again */
     update = () => {
         this.setState({
             items: {},
@@ -110,12 +120,15 @@ export default class HomeScreen extends React.Component {
         }, 100)
     }
 
+    /* Call the update function to get all the values at the start */
     componentDidMount = () => {
         this.update()
     }
 
+    /* Show menu of classes and events in the cause user wants to add an event */
     _openMenu = () => this.setState({ visible: true });
 
+    /* Close menu of classes and events */
     _closeMenu = () => this.setState({ visible: false });
 
     render() {
@@ -377,10 +390,12 @@ export default class HomeScreen extends React.Component {
             )
     }
 
+    /* Show the modal to add an event to calendar */
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
     }
 
+    /* Change the selected date if user presses a new date */
     onDayPress(day) {
         this.setState({
             selected: day.dateString

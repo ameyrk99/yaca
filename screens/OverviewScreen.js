@@ -31,9 +31,12 @@ export default class HomeCalendar extends Component {
         isLoadingData: true,
     }
 
+    /* Get the classes and their color properties for the user */
     fetchClasses = () => {
         firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
+                /* Because of react, we can't can't just change the events in state, thus create a copy and replace
+                 * in state */
                 const tempc = this.state.events
                 tempc.classes[childSnapshot.key] = childSnapshot.val()
                 this.setState({
@@ -43,8 +46,11 @@ export default class HomeCalendar extends Component {
         })
     }
 
+    /* Get the events and their color properties for the user */
     fetchEvents = () => {
         firebase.database().ref('/users/'+this.state.userID).child('eventProps').once('value', snapshot => {
+            /* Because of react, we can't can't just change the events in state, thus create a copy and replace
+             * in state */
             const tempe = this.state.events
             tempe['Meetings'] = snapshot.child('Meetings').val()
             tempe['Misc Events'] = snapshot.child('Misc Events').val()
@@ -54,6 +60,7 @@ export default class HomeCalendar extends Component {
         })
     }
 
+    /* Fetch all the events for that user */
     fetchAgendaEvents = () => {
         firebase.database().ref('/users/'+this.state.userID).child('events').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
@@ -75,6 +82,7 @@ export default class HomeCalendar extends Component {
         })
     }
 
+    /* Reset all values and fetch everything again */
     update = () => {
         this.setState({
             items: {},
@@ -96,12 +104,14 @@ export default class HomeCalendar extends Component {
         }, 100)
     }
 
+    /* Call the update function to get all the values at the start */
     componentDidMount = () => {
         this.update()
 
         var d = new Date()
         const date = d.toISOString().split('T')[0]
 
+        /* If there is no event for that day in DB, create an empty event array */
         const temp = this.state.items
         if (!temp[date]) {
             temp[date] = []
@@ -156,6 +166,7 @@ export default class HomeCalendar extends Component {
         // }
     }
 
+    /* Function to render an event item */
     renderItem = (item) => {
         return (
             <View style={[styles.item, { backgroundColor: item.important ? 'red' : 'white' }]}>
@@ -177,12 +188,14 @@ export default class HomeCalendar extends Component {
         );
     }
 
+    /* Function to render for empty data */
     renderEmptyData = () => {
         return (
             <View style={styles.emptyData}><Text>Nothing here! <Emoji name={'grinning'} /></Text></View>
         );
     }
 
+    /* Function to render no date */
     renderEmptyDate = () => {
         return (
             <View style={styles.emptyDate}><Text>Nothing here! <Emoji name={'grinning'} /></Text></View>

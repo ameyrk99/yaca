@@ -41,6 +41,7 @@ export default class ColorsPage extends React.Component {
         tempValBase: 'asdfasdgasdfasdf',
     }
 
+    /* Get classes and their color properties from DB */
     fetchClasses = () => {
         firebase.database().ref('/users/'+this.state.userID).child('classProps').once('value', (snapshot) => {
             snapshot.forEach((childSnapshot) => {
@@ -53,6 +54,7 @@ export default class ColorsPage extends React.Component {
         })
     }
 
+    /* Get events and their color properties from DB */
     fetchEvents = () => {
         firebase.database().ref('/users/'+this.state.userID).child('eventProps').on('value', snapshot => {
             const tempe = this.state.events
@@ -64,22 +66,24 @@ export default class ColorsPage extends React.Component {
         })
     }
 
+    /* Get classes and events once screen loads */
     componentDidMount() {
         this.props.navigation.setParams({ goBack: this._goBack })
         this.fetchEvents()
         this.fetchClasses()
     }
 
+    /* Navigate to settings page from color settings */
     _goBack = () => {
         this.props.navigation.navigate('SettingsStack');
     }
 
+    /* Show color palette */
     setpaletteVis = (visible) => {
         this.setState({ paletteVis: visible });
     }
 
     render() {
-
         const ControlledColorPicker = () => {
             let selectedColor = Colors.colorPalette[0];
             return (

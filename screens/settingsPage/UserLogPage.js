@@ -23,21 +23,24 @@ export default class UserLogPage extends React.Component {
         });
     }
 
+    /* Get push notification token for user's device */
     _getPushToken = async (userID) => {
         const { status: existingStatus } = await Permissions.getAsync(
             Permissions.NOTIFICATIONS
-        );
-        let finalStatus = existingStatus;
+        )
+
+        let finalStatus = existingStatus
 
         if (existingStatus !== 'granted') {
-            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-            finalStatus = status;
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+            finalStatus = status
         }
 
         if (finalStatus !== 'granted') {
-            return;
+            return
         }
 
+        /* Update token in DB */
         let token = await Notifications.getExpoPushTokenAsync()
         firebase.database().ref('/users/' + userID).update({ pushToken: token })
     }
@@ -46,13 +49,15 @@ export default class UserLogPage extends React.Component {
         this.props.navigation.setParams({ goBack: this._goBack });
     }
 
+    /* Go back to settings screen from this screen */
     _goBack = () => {
         this.props.navigation.navigate('HomeStack');
     }
 
+    /* Sign in with google from web */
     _signIn = async () => {
         try {
-            // Second one in the google-services.json file
+            /* Second one in the google-services.json file */
             const { type, idToken, accessToken } = await Google.logInAsync({ clientId: "<**Client ID**>" });
 
             if (type === "success") {
@@ -85,7 +90,6 @@ export default class UserLogPage extends React.Component {
     }
 
     render() {
-
         return (
             <ImageBackground source={require('./loginSplash.png')} style={{ width: '100%', height: '100%' }}>
                 <View style={{ flex: 1 }}>

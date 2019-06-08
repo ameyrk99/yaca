@@ -30,6 +30,7 @@ export default class NotepadScreen extends React.Component {
         text: ''
     }
 
+    /* Get the notes of particular user from firebase */
     fetchNotes = () => {
         firebase.database().ref('/users/'+this.state.userID).once('value', snapshot => {
             let tempn = this.state.text
@@ -40,6 +41,7 @@ export default class NotepadScreen extends React.Component {
         })
     }
 
+    /* Call the fetchNotes function at the start */
     componentDidMount() {
         this.fetchNotes()
     }

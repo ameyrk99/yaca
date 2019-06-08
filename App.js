@@ -6,7 +6,7 @@ import AppNavigator from './navigation/AppNavigator';
 import { db } from './database/config';
 import firebase from 'firebase';
 
-export default class Index extends React.Component {
+export default class App extends React.Component {
     state = {
         isLoadingComplete: false,
         isUserLoggedIn: false,
@@ -15,6 +15,7 @@ export default class Index extends React.Component {
     render() {
         if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
             return (
+                /* Show loading screen */
                 <AppLoading
                     startAsync={this._loadResourcesAsync}
                     onError={this._handleLoadingError}
@@ -25,6 +26,7 @@ export default class Index extends React.Component {
             return (
                 <View style={styles.container}>
                     {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+                    /* Show main navigator */
                     <AppNavigator />
                 </View>
             );
@@ -32,7 +34,6 @@ export default class Index extends React.Component {
     }
 
     _loadResourcesAsync = async () => {
-
         return Promise.all([
             Asset.loadAsync([
                 require('./assets/images/robot-dev.png'),

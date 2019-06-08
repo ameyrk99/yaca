@@ -33,6 +33,7 @@ export default class NotificationsPage extends React.Component {
         switchValue: null,
     }
 
+    /* Get notification preference for user from the DB */
     fetchInfo = () => {
         firebase.database().ref('/users/' + this.state.userID).once('value', snapshot => {
             let tempe = this.state.switchValue
@@ -43,11 +44,13 @@ export default class NotificationsPage extends React.Component {
         })
     }
 
+    /* Get info once screen loads */
     componentDidMount() {
         this.props.navigation.setParams({ goBack: this._goBack });
         this.fetchInfo()
     }
 
+    /* Go back to settings screen from this screen */
     _goBack = () => {
         this.props.navigation.navigate('SettingsStack');
     }
